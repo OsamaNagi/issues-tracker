@@ -47,7 +47,7 @@ const updatedAt = computed(() => {
                     </span>
                 </h3>
                 <p class="text-sm text-gray-400">
-                    {{ user.name }} #2 updated {{ updatedAt }}
+                    {{ user.name }} #{{ project.id }} updated {{ updatedAt }}
                 </p>
             </div>
         </div>

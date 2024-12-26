@@ -2,9 +2,7 @@
 import { Head, Link } from "@inertiajs/vue3";
 import {ref, computed, reactive} from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ProjectCard from "@/Components/ProjectCard.vue";
-import Modal from "@/Components/Modal.vue";
 import CreateProjectModal from "@/Components/createProjectModal.vue";
 
 

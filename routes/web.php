@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\IssueController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Foundation\Application;
@@ -11,6 +12,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [ProjectController::class, 'index'])->name('home');
     Route::post('/project', [ProjectController::class, 'store'])->name('project.store');
     Route::get('/project/{project}', [ProjectController::class, 'show'])->name('project.show');
+
+    Route::post('/project/{project}/issue', [IssueController::class, 'store'])->name('issue.store');
 });
 
 

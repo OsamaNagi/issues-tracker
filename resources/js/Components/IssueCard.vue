@@ -1,10 +1,30 @@
-<script setup></script>
+<script setup>
+
+import {computed, reactive} from "vue";
+import {formatDistanceToNow} from "date-fns";
+
+const props = defineProps({
+    project: {
+        type: Object,
+        required: true,
+    },
+    issue: {
+        type: Object,
+        required: true,
+    },
+});
+
+const issue = reactive(props.issue);
+
+const createdAt = computed(() => {
+    return formatDistanceToNow(new Date(issue.created_at), { addSuffix: true });
+})
+
+</script>
 
 <template>
     <!-- Issues List -->
     <div
-        v-for="issue in filteredIssues"
-        :key="issue.id"
         class="flex items-center justify-between p-4 bg-gray-800 rounded-b-lg"
     >
         <!-- Left Content -->
@@ -12,12 +32,11 @@
             <span class="w-3 h-3 mr-3 bg-green-500 rounded-full"></span>
             <div>
                 <h3 class="font-semibold">
-                    {{ issue.repo }}
+                    {{ project.name }}/
                     <span class="text-gray-400">{{ issue.title }}</span>
                 </h3>
                 <p class="text-sm text-gray-400">
-                    #{{ issue.id }} opened {{ issue.daysAgo }} days ago by
-                    {{ issue.author }}
+                    #{{ issue.id }} opened {{ createdAt }} by {{ issue.created_by }}
                 </p>
             </div>
         </div>
