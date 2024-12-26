@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('status')->default(IssueStatusEnum::OPEN);
             $table->enum('visibility', ['public', 'private'])->default('private');
             $table->timestamps();

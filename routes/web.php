@@ -1,18 +1,20 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Home', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'user' => 'lol'
-    ]);
-})->middleware(['auth', 'verified'])->name('home');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/', [ProjectController::class, 'index'])->name('home');
+    Route::post('/project', [ProjectController::class, 'store'])->name('project.store');
+    Route::get('/project/{project}', [ProjectController::class, 'show'])->name('project.show');
+});
+
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
