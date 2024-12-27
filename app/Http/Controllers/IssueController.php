@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Issue;
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 
@@ -10,23 +11,18 @@ class IssueController extends Controller
 {
     use HasFactory;
 
-    public function store(Request $request)
+    public function store(Request $request, Project $project)
     {
-        $request->validate([
+         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'priority' => 'required|string|in:low,medium,high,critical',
         ]);
 
-        Issue::create([
-            'title' => $request->title,
-            'description' => $request->description,
-            'status' => 'open',
-            'project_id' => $request->project_id,
-            'created_by' => $request->user()->id,
-            'assigned_id' => $request->assigned_id,
-            'priority' => $request->priority,
-        ]);
+        $validated['created_by'] = auth()->id();
 
-        return redirect()->route('project.show');
+        $project->issues()->create($validated);
+
+        return redirect()->back()->with('success', 'Issue created successfully!');
     }
 }
