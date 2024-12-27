@@ -3,26 +3,44 @@
 namespace App\Http\Controllers;
 
 use App\Models\Issue;
+use App\Models\Labels;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class IssueController extends Controller
 {
     use HasFactory;
 
+
+    public function create(Project $project)
+    {
+        $labels = Labels::all();
+
+        return Inertia::render('Issue/Create', [
+            'project' => $project,
+            'labels' => $labels,
+        ]);
+    }
+
     public function store(Request $request, Project $project)
     {
-         $validated = $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|string|in:low,medium,high,critical',
+            'label_id' => 'nullable|exists:labels,id',
         ]);
 
         $validated['created_by'] = auth()->id();
 
-        $project->issues()->create($validated);
+        $issue = $project->issues()->create($validated);
 
-        return redirect()->back()->with('success', 'Issue created successfully!');
+        if ($request->label_id) {
+            $issue->labels()->attach($request->label_id);
+        }
+
+        return redirect()->route('project.show', $project);
     }
 }

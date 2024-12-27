@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Issue extends Model
 {
@@ -24,5 +25,10 @@ class Issue extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(Labels::class, 'issue_labels', 'issue_id', 'label_id');
     }
 }

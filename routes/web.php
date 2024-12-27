@@ -10,9 +10,11 @@ use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [ProjectController::class, 'index'])->name('home');
+    Route::get('/project', [ProjectController::class, 'create'])->name('project.create');
     Route::post('/project', [ProjectController::class, 'store'])->name('project.store');
     Route::get('/project/{project}', [ProjectController::class, 'show'])->name('project.show');
 
+    Route::get('/project/{project}/issue', [IssueController::class, 'create'])->name('issue.create');
     Route::post('/project/{project}/issue', [IssueController::class, 'store'])->name('issue.store');
 });
 

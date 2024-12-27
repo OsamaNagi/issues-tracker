@@ -5,6 +5,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ProjectCard from "@/Components/ProjectCard.vue";
 import CreateIssueModal from "@/Components/createIssueModal.vue";
 import IssueCard from "@/Components/IssueCard.vue";
+import {Link} from "@inertiajs/vue3";
 
 const props = defineProps({
     project: {
@@ -29,7 +30,10 @@ const filteredIssues = computed(() => {
     <AuthenticatedLayout>
         <div class="h-screen">
             <div class="flex items-center justify-between">
-                <CreateIssueModal :project="project" />
+<!--                <CreateIssueModal :project="project" :issues="issues" />-->
+                <Link
+                    class="px-5 py-2 text-sm font-bold text-white bg-blue-700 rounded-md hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+                    :href="route('issue.create', { project: props.project.id })">Create Issue</Link>
             </div>
 
             <div

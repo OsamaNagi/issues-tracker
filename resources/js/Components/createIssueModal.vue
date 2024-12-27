@@ -9,6 +9,9 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    issues: {
+        type: Object,
+    },
 })
 // Initialize the form
 const form = useForm({
@@ -119,16 +122,14 @@ const submitForm = () => {
                                 <option value="critical">critical</option>
                             </select>
                         </div>
-<!--                        <div class="col-span-2">-->
-<!--                            <label for="priority" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Label</label>-->
-<!--                            <select id="priority" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">-->
-<!--                                <option selected>Choose a label</option>-->
-<!--                                <option value="low">Low</option>-->
-<!--                                <option value="medium">medium</option>-->
-<!--                                <option value="high">high</option>-->
-<!--                                <option value="critical">critical</option>-->
-<!--                            </select>-->
-<!--                        </div>-->
+                        <div class="col-span-2">
+                            <label for="label" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Label</label>
+                            <select id="label" name="label_ids[]" multiple class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                v-for="label in issues.labels"
+                            >
+                                <option :value="label.id">{{ label.name }}</option>
+                            </select>
+                        </div>
                     </div>
                     <PrimaryButton type="submit" class="flex">
                         <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
