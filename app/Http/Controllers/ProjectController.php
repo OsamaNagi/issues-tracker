@@ -48,9 +48,11 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        $issue = $project->issues()->with('labels')->get();
+
         return Inertia::render('Project/Show', [
             'project' => $project,
-            'issues' => $project->issues,
+            'issues' => $issue,
         ]);
     }
 }

@@ -17,15 +17,27 @@ const props = defineProps({
 const issue = reactive(props.issue);
 
 const createdAt = computed(() => {
-    return formatDistanceToNow(new Date(issue.created_at), { addSuffix: true });
+    return formatDistanceToNow(new Date(issue.created_at), {addSuffix: true});
 })
+
+const dimColor = (hex) => {
+    return hexToRgbA(hex, 0.2);  // Adjust 0.2 for the desired dimming effect
+};
+
+// Helper function to convert hex to RGBA
+const hexToRgbA = (hex, alpha = 1) => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 
 </script>
 
 <template>
     <!-- Issues List -->
     <div
-        class="flex items-center justify-between p-4 bg-gray-800 rounded-b-lg"
+        class="flex items-center justify-between p-4 bg-gray-800 hover:bg-gray-700 transition-colors duration-100"
     >
         <!-- Left Content -->
         <div class="flex items-center">
@@ -46,9 +58,14 @@ const createdAt = computed(() => {
             <span
                 v-for="label in issue.labels"
                 :key="label"
-                class="px-2 py-1 text-xs font-semibold text-white bg-red-500 rounded-full"
+                :style="{
+                    backgroundColor: dimColor(label.color),
+                    borderColor: label.color,
+                    color: label.color
+                }"
+                class="border px-2 py-1 text-sm font-bold text-white  rounded-full"
             >
-                {{ label }}
+                {{ label.name }}
             </span>
         </div>
     </div>

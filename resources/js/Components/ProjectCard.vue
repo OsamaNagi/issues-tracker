@@ -23,7 +23,7 @@ const updatedAt = computed(() => {
 
 <template>
     <Link :href="route('project.show', project.id)" class="">
-        <div class="flex items-center justify-between p-4 bg-gray-800 hover:bg-gray-700 transition-colors duration-100ß">
+        <div class="flex items-center justify-between p-4 bg-gray-800 hover:bg-gray-700 transition-colors duration-100">
             <!-- Left Content -->
             <div class="flex items-center">
                 <svg
