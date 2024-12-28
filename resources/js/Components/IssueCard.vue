@@ -2,6 +2,7 @@
 
 import {computed, reactive} from "vue";
 import {formatDistanceToNow} from "date-fns";
+import {Link} from "@inertiajs/vue3";
 
 const props = defineProps({
     project: {
@@ -15,6 +16,7 @@ const props = defineProps({
 });
 
 const issue = reactive(props.issue);
+const project = reactive(props.project);
 
 const createdAt = computed(() => {
     return formatDistanceToNow(new Date(issue.created_at), {addSuffix: true});
@@ -36,25 +38,26 @@ const hexToRgbA = (hex, alpha = 1) => {
 
 <template>
     <!-- Issues List -->
-    <div
-        class="flex items-center justify-between p-4 bg-gray-800 hover:bg-gray-700 transition-colors duration-100"
-    >
-        <!-- Left Content -->
-        <div class="flex items-center">
-            <span class="w-3 h-3 mr-3 bg-green-500 rounded-full"></span>
-            <div>
-                <h3 class="font-semibold">
-                    {{ project.name }}/
-                    <span class="text-gray-400">{{ issue.title }}</span>
-                </h3>
-                <p class="text-sm text-gray-400">
-                    #{{ issue.id }} opened {{ createdAt }} by {{ issue.created_by }}
-                </p>
+    <Link :href="route('issue.show', { project: project.id, issue: issue.id })" class="">
+        <div
+            class="flex items-center justify-between p-4 bg-gray-800 hover:bg-gray-700 transition-colors duration-100"
+        >
+            <!-- Left Content -->
+            <div class="flex items-center">
+                <span class="w-3 h-3 mr-3 bg-green-500 rounded-full"></span>
+                <div>
+                    <h3 class="font-semibold">
+                        {{ project.name }}/
+                        <span class="text-gray-400">{{ issue.title }}</span>
+                    </h3>
+                    <p class="text-sm text-gray-400">
+                        #{{ issue.id }} opened {{ createdAt }} by {{ issue.created_by }}
+                    </p>
+                </div>
             </div>
-        </div>
 
-        <!-- Labels -->
-        <div>
+            <!-- Labels -->
+            <div>
             <span
                 v-for="label in issue.labels"
                 :key="label"
@@ -67,6 +70,7 @@ const hexToRgbA = (hex, alpha = 1) => {
             >
                 {{ label.name }}
             </span>
+            </div>
         </div>
-    </div>
+    </Link>
 </template>

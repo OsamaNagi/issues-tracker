@@ -13,7 +13,13 @@ class ProjectController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $projects = Project::where('user_id', $user->id)->get();
+
+        $projects = Project::with('creator')
+            ->where('user_id', $user->id)
+            ->orWhereHas('users', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->get();
 
         return Inertia::render('Home', [
             'canLogin' => Route::has('login'),
@@ -48,11 +54,23 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $issue = $project->issues()->with('labels')->get();
-
         return Inertia::render('Project/Show', [
-            'project' => $project,
-            'issues' => $issue,
+            'project' => $project->load('users', 'issues'),
+            'issues' => $project->issues->load('labels')
         ]);
     }
+
+    public function addUsers(Request $request, Project $project)
+    {
+        $validated = $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'exists:users,id',
+        ]);
+
+        // Attach users to the project
+        $project->users()->syncWithoutDetaching($validated['user_ids']);
+
+        return redirect()->route('project.show', $project);
+    }
+
 }

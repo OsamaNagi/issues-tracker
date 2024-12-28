@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -47,13 +48,23 @@ class User extends Authenticatable
         ];
     }
 
-    public function projects(): HasMany
+    public function project(): HasMany
     {
         return $this->hasMany(Project::class, 'user_id');
+    }
+
+    public function projects(): BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_user', 'user_id', 'project_id');
     }
 
     public function issues(): HasMany
     {
         return $this->hasMany(Issue::class, 'created_by');
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'user_id');
     }
 }

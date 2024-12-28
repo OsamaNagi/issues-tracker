@@ -43,4 +43,15 @@ class IssueController extends Controller
 
         return redirect()->route('project.show', $project);
     }
+
+    public function show(Project $project, Issue $issue)
+    {
+        $issue = $issue->load(['comments.user', 'labels', 'project']); // Eager load relations
+
+        return Inertia::render('Issue/Show', [
+            'project' => $project,
+            'issue' => $issue,
+            'comments' => $issue->comments,
+        ]);
+    }
 }

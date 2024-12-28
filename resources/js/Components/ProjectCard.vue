@@ -42,13 +42,13 @@ const updatedAt = computed(() => {
                 </svg>
                 <div>
                     <h3 class="font-semibold capitalize">
-                        @{{ user.name }}'s
+                        @{{ project.creator.name }}'s
                         <span class="text-gray-400">
                         ({{ project.name }})
                     </span>
                     </h3>
                     <p class="text-sm text-gray-400">
-                        {{ user.name }} #{{ project.id }} updated {{ updatedAt }}
+                        {{ project.creator.name }} #{{ project.id }} updated {{ updatedAt }}
                     </p>
                 </div>
             </div>

@@ -16,6 +16,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/project/{project}/issue', [IssueController::class, 'create'])->name('issue.create');
     Route::post('/project/{project}/issue', [IssueController::class, 'store'])->name('issue.store');
+    Route::get('/projects/{project}/issues/{issue}', [IssueController::class, 'show'])->name('issue.show');
 });
 
 
