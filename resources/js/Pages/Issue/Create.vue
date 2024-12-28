@@ -15,6 +15,10 @@ const props = defineProps({
     labels: {
         type: Object,
     },
+    users: {
+        type: Object,
+        required: true,
+    },
 });
 
 // Initialize the form
@@ -22,7 +26,8 @@ const form = useForm({
     title: '',
     description: '',
     priority: 'low',
-    label_id: null, // Single label selection
+    label_id: null,
+    assignee_ids: [],
 });
 
 // Handle form submission
@@ -118,6 +123,31 @@ const submitForm = () => {
                             </option>
                         </select>
                         <p v-if="form.errors.label_id" class="text-red-500 text-sm">{{ form.errors.label_id }}</p>
+                    </div>
+
+                    <!-- assignee user Field -->
+                    <div class="col-span-2">
+                        <label
+                            for="assignees"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                            Assignee User
+                        </label>
+                        <select
+                            id="assignees"
+                            v-model="form.assignee_ids"
+                            multiple
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        >
+                            <option
+                                v-for="user in users"
+                                :key="user.id"
+                                :value="user.id"
+                            >
+                                {{ user.name }}
+                            </option>
+                        </select>
+                        <p v-if="form.errors.assignee_ids" class="text-red-500 text-sm">{{ form.errors.assignee_ids }}</p>
                     </div>
                 </div>
 

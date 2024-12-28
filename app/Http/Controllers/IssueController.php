@@ -31,6 +31,8 @@ class IssueController extends Controller
             'description' => 'required|string',
             'priority' => 'required|string|in:low,medium,high,critical',
             'label_id' => 'nullable|exists:labels,id',
+            'assignees' => 'nullable|array',
+            'assignees.*' => 'exists:users,id',
         ]);
 
         $validated['created_by'] = auth()->id();
@@ -41,17 +43,22 @@ class IssueController extends Controller
             $issue->labels()->attach($request->label_id);
         }
 
+        if ($request->assignees) {
+            $issue->assignees()->attach($request->assignees);
+        }
+
         return redirect()->route('project.show', $project);
     }
 
     public function show(Project $project, Issue $issue)
     {
-        $issue = $issue->load(['comments.user', 'labels', 'project', 'creator']); // Eager load relations
+        $issue = $issue->load(['comments.user', 'labels', 'project', 'creator', 'assignees']);
 
         return Inertia::render('Issue/Show', [
             'project' => $project,
             'issue' => $issue,
             'comments' => $issue->comments,
+            'assignees' => $issue->assignees,
         ]);
     }
 }

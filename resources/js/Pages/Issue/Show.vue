@@ -63,9 +63,9 @@ const updatedAt = computed(() => {
                 <div class="bg-gray-800 p-4 rounded-lg">
                     <h2 class="text-lg font-bold text-white">Assignees</h2>
                     <ul>
-<!--                        <li v-for="user in issue.assignees" :key="user.id" class="text-gray-300">-->
-<!--                            {{ user.name }}-->
-<!--                        </li>-->
+                        <li v-for="user in issue.assignees" :key="user.id" class="text-gray-300">
+                            {{ user.name }}
+                        </li>
                     </ul>
                 </div>
 

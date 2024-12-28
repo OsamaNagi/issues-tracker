@@ -35,7 +35,7 @@ class Issue extends Model
 
     public function assignees(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'issue_assignees', 'issue_id', 'user_id');
+        return $this->belongsToMany(User::class, 'issue_assignees');
     }
 
     public function comments(): HasMany
