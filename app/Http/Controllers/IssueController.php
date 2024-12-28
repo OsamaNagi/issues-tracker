@@ -46,7 +46,7 @@ class IssueController extends Controller
 
     public function show(Project $project, Issue $issue)
     {
-        $issue = $issue->load(['comments.user', 'labels', 'project']); // Eager load relations
+        $issue = $issue->load(['comments.user', 'labels', 'project', 'creator']); // Eager load relations
 
         return Inertia::render('Issue/Show', [
             'project' => $project,

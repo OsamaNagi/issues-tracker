@@ -1,11 +1,22 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import CommentSection from "@/Components/CommentSection.vue";
+import {computed} from "vue";
+import {formatDistanceToNow} from "date-fns";
+import DimedLabel from "@/Components/DimedLabel.vue";
+// import ActivityLog from "@/Components/ActivityLog.vue";
 
 const props = defineProps({
     project: Object,
     issue: Object,
-    comments: Object
+    comments: Object,
 });
+
+
+const updatedAt = computed(() => {
+    return formatDistanceToNow(new Date(props.issue.updated_at), {addSuffix: true});
+})
+
 </script>
 
 <template>
@@ -20,13 +31,14 @@ const props = defineProps({
                             {{ issue.title }} <span class="text-gray-400">#{{ issue.id }}</span>
                         </h1>
                         <p class="text-sm text-gray-400">
-<!--                            {{ issue.status === 'open' ? 'Opened' : 'Closed' }} by {{ issue.user.name }}-->
+                            {{ issue.creator.name }} {{ issue.status === 'open' ? 'Opened' : 'Closed' }} this issue
+                            {{ updatedAt }}
                         </p>
                     </div>
                     <span
                         :class="{
                             'bg-green-500': issue.status === 'open',
-                            'bg-gray-600': issue.status === 'closed',
+                            'bg-indigo-600': issue.status === 'closed',
                         }"
                         class="px-3 py-1 text-white rounded-full"
                     >
@@ -35,10 +47,8 @@ const props = defineProps({
                 </div>
 
                 <!-- Comments Section -->
-                <div v-for="comment in comments" :key="comment.id" class="p-4 border-b border-gray-700">
-                    <p class="text-sm text-gray-400">{{ comment.user.name }} commented:</p>
-                    <p class="text-gray-200">{{ comment.content }}</p>
-                    <p class="text-xs text-gray-500">{{ new Date(comment.created_at).toLocaleString() }}</p>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <CommentSection :comments="issue.comments" />
                 </div>
 
                 <!-- Activity Log -->
@@ -62,15 +72,14 @@ const props = defineProps({
                 <!-- Labels -->
                 <div class="bg-gray-800 p-4 rounded-lg">
                     <h2 class="text-lg font-bold text-white">Labels</h2>
-                    <div class="flex flex-wrap">
-                        <span
+                    <div class="flex flex-wrap mt-2">
+                        <DimedLabel
                             v-for="label in issue.labels"
-                            :key="label.id"
-                            :style="{ backgroundColor: label.color + '33', color: label.color }"
-                            class="px-2 py-1 rounded-full text-sm border mr-2 mb-2"
+                            :key="label"
+                            :Color="label.color"
                         >
                             {{ label.name }}
-                        </span>
+                        </DimedLabel>
                     </div>
                 </div>
 

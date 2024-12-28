@@ -3,6 +3,7 @@
 import {computed, reactive} from "vue";
 import {formatDistanceToNow} from "date-fns";
 import {Link} from "@inertiajs/vue3";
+import DimedLabel from "@/Components/DimedLabel.vue";
 
 const props = defineProps({
     project: {
@@ -58,18 +59,13 @@ const hexToRgbA = (hex, alpha = 1) => {
 
             <!-- Labels -->
             <div>
-            <span
+            <DimedLabel
                 v-for="label in issue.labels"
                 :key="label"
-                :style="{
-                    backgroundColor: dimColor(label.color),
-                    borderColor: label.color,
-                    color: label.color
-                }"
-                class="border px-2 py-1 text-sm font-bold text-white  rounded-full"
+                :Color="label.color"
             >
                 {{ label.name }}
-            </span>
+            </DimedLabel>
             </div>
         </div>
     </Link>
