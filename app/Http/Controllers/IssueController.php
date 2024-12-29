@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreIssueRequest;
 use App\Models\Issue;
 use App\Models\Labels;
 use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 
 class IssueController extends Controller
@@ -17,34 +19,31 @@ class IssueController extends Controller
     public function create(Project $project)
     {
         $labels = Labels::all();
+        $projectUsers = $project->users()->get();
 
         return Inertia::render('Issue/Create', [
             'project' => $project,
             'labels' => $labels,
+            'projectUsers' => $projectUsers,
         ]);
     }
 
-    public function store(Request $request, Project $project)
+    public function store(StoreIssueRequest $request, Project $project)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'priority' => 'required|string|in:low,medium,high,critical',
-            'label_id' => 'nullable|exists:labels,id',
-            'assignees' => 'nullable|array',
-            'assignees.*' => 'exists:users,id',
-        ]);
+        $validatedData = $request->validated();
+        $validatedData['created_by'] = auth()->id();
 
-        $validated['created_by'] = auth()->id();
+        // Create the issue while excluding label_id and assignee_ids
+        $issue = $project->issues()->create(Arr::except($validatedData, ['label_ids', 'assignee_ids']));
 
-        $issue = $project->issues()->create($validated);
-
-        if ($request->label_id) {
-            $issue->labels()->attach($request->label_id);
+        // Attach labels if provided
+        if ($request->label_ids) {
+            $issue->labels()->attach($request->label_ids);
         }
 
-        if ($request->assignees) {
-            $issue->assignees()->attach($request->assignees);
+        // Attach assignees if provided
+        if ($request->assignee_ids) {
+            $issue->assignees()->attach($request->assignee_ids);
         }
 
         return redirect()->route('project.show', $project);

@@ -72,7 +72,7 @@ const updatedAt = computed(() => {
                 <!-- Labels -->
                 <div class="bg-gray-800 p-4 rounded-lg">
                     <h2 class="text-lg font-bold text-white">Labels</h2>
-                    <div class="flex flex-wrap mt-2">
+                    <div class="flex flex-wrap mt-2 space-x-2">
                         <DimedLabel
                             v-for="label in issue.labels"
                             :key="label"

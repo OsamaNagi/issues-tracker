@@ -58,14 +58,14 @@ const hexToRgbA = (hex, alpha = 1) => {
             </div>
 
             <!-- Labels -->
-            <div>
-            <DimedLabel
-                v-for="label in issue.labels"
-                :key="label"
-                :Color="label.color"
-            >
-                {{ label.name }}
-            </DimedLabel>
+            <div class="space-x-2 flex flex-wrap gap-y-2">
+                <DimedLabel
+                    v-for="label in issue.labels"
+                    :key="label"
+                    :Color="label.color"
+                >
+                    {{ label.name }}
+                </DimedLabel>
             </div>
         </div>
     </Link>

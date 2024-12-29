@@ -3,6 +3,8 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import LabelInputField from "@/Components/LabelInputField.vue";
 import { useForm } from "@inertiajs/vue3";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
 
 const props = defineProps({
     project: {
@@ -15,10 +17,9 @@ const props = defineProps({
     labels: {
         type: Object,
     },
-    users: {
+    projectUsers: {
         type: Object,
-        required: true,
-    },
+    }
 });
 
 // Initialize the form
@@ -26,7 +27,7 @@ const form = useForm({
     title: '',
     description: '',
     priority: 'low',
-    label_id: null,
+    label_ids: [],
     assignee_ids: [],
 });
 
@@ -108,20 +109,15 @@ const submitForm = () => {
                         >
                             Label
                         </label>
-                        <select
+                        <v-select
                             id="label"
-                            v-model="form.label_id"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
-                            <option value="" disabled selected>Choose a label</option>
-                            <option
-                                v-for="label in labels"
-                                :key="label.id"
-                                :value="label.id"
-                            >
-                                {{ label.name }}
-                            </option>
-                        </select>
+                            v-model="form.label_ids"
+                            multiple
+                            :options="labels"
+                            label="name"
+                            :reduce="label => label.id"
+                            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        />
                         <p v-if="form.errors.label_id" class="text-red-500 text-sm">{{ form.errors.label_id }}</p>
                     </div>
 
@@ -133,20 +129,14 @@ const submitForm = () => {
                         >
                             Assignee User
                         </label>
-                        <select
+                        <v-select
                             id="assignees"
                             v-model="form.assignee_ids"
                             multiple
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
-                            <option
-                                v-for="user in users"
-                                :key="user.id"
-                                :value="user.id"
-                            >
-                                {{ user.name }}
-                            </option>
-                        </select>
+                            :options="projectUsers"
+                            label="name"
+                            :reduce="user => user.id"
+                            class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
                         <p v-if="form.errors.assignee_ids" class="text-red-500 text-sm">{{ form.errors.assignee_ids }}</p>
                     </div>
                 </div>
