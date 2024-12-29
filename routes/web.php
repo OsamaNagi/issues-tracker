@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
@@ -13,10 +14,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/project', [ProjectController::class, 'create'])->name('project.create');
     Route::post('/project', [ProjectController::class, 'store'])->name('project.store');
     Route::get('/project/{project}', [ProjectController::class, 'show'])->name('project.show');
+    Route::get('/project/{project}/edit', [ProjectController::class, 'edit'])->name('project.edit');
+    Route::patch('/project/{project}', [ProjectController::class, 'update'])->name('project.update');
 
     Route::get('/project/{project}/issue', [IssueController::class, 'create'])->name('issue.create');
     Route::post('/project/{project}/issue', [IssueController::class, 'store'])->name('issue.store');
     Route::get('/projects/{project}/issues/{issue}', [IssueController::class, 'show'])->name('issue.show');
+
+    Route::post('/projects/{project}/issues/{issue}/comments', [CommentController::class, 'store'])->name('comment.store');
 });
 
 

@@ -10,7 +10,7 @@ class Comment extends Model
 {
     use SoftDeletes; // Optional, if using soft deletes
 
-    protected $fillable = ['issue_id', 'user_id', 'content'];
+    protected $guarded = [];
 
     // Relation to Issue
     public function issue(): BelongsTo

@@ -1,13 +1,13 @@
 <template>
-    <div>
-        <div v-for="comment in comments" :key="comment.id" class="mb-4 border-b pb-2">
-            <p>
+    <div class="space-y-4">
+        <div v-for="comment in comments" :key="comment.id" class=" bg-gray-800 p-4 rounded-lg">
+            <p class="text-gray-50">
                 <strong>@{{ comment.user.name }}</strong> commented
-                <span class="text-gray-500 text-sm">
+                <span class="text-gray-50 text-sm">
                     {{ new Date(comment.created_at).toLocaleString() }}
                 </span>
             </p>
-            <p>{{ comment.content }}</p>
+            <p class="text-gray-50">{{ comment.content }}</p>
         </div>
     </div>
 </template>

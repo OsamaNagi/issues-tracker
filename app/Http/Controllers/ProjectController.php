@@ -73,4 +73,11 @@ class ProjectController extends Controller
         return redirect()->route('project.show', $project);
     }
 
+    public function edit(Project $project)
+    {
+        return Inertia::render('Project/Edit', [
+            'project' => $project,
+        ]);
+    }
+
 }

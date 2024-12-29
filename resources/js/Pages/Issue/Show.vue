@@ -4,6 +4,7 @@ import CommentSection from "@/Components/CommentSection.vue";
 import {computed} from "vue";
 import {formatDistanceToNow} from "date-fns";
 import DimedLabel from "@/Components/DimedLabel.vue";
+import {useForm} from "@inertiajs/vue3";
 // import ActivityLog from "@/Components/ActivityLog.vue";
 
 const props = defineProps({
@@ -12,7 +13,24 @@ const props = defineProps({
     comments: Object,
 });
 
+// Initialize the form
+const form = useForm({
+    content: '',
+});
 
+// Handle form submission
+const submitForm = () => {
+    form.post(route('comment.store', { project: props.project.id, issue: props.issue.id }), {
+        onError: (errors) => {
+            console.error('Validation errors:', errors);
+        },
+        onSuccess: () => {
+            form.reset();
+        //     todo scroll to the added comment
+
+        },
+    });
+};
 const updatedAt = computed(() => {
     return formatDistanceToNow(new Date(props.issue.updated_at), {addSuffix: true});
 })
@@ -46,15 +64,28 @@ const updatedAt = computed(() => {
                     </span>
                 </div>
 
-                <!-- Comments Section -->
                 <div class="bg-gray-800 p-4 rounded-lg">
+                    <h2 class="text-lg font-bold text-white">Description</h2>
+                    <p class="text-gray-300">{{ issue.description }}</p>
+                </div>
+
+                <h2 class="text-lg font-bold text-white">Comments</h2>
+                <div class="">
                     <CommentSection :comments="issue.comments" />
                 </div>
 
-                <!-- Activity Log -->
                 <div class="bg-gray-800 p-4 rounded-lg">
-<!--                    <ActivityLog :logs="issue.activity_logs" />-->
+                    <h2 class="text-lg font-bold text-white">Add Comment</h2>
+                    <form @submit.prevent="submitForm">
+                        <textarea name="content" v-model="form.content" id="content" class="w-full h-24 bg-gray-700 text-gray-300 p-4 rounded-lg" placeholder="Enter your comment here"></textarea>
+                        <button type="submit" class="mt-2 px-4 py-2 bg-blue-700 text-white rounded-md">Add Comment</button>
+                    </form>
                 </div>
+
+                <!-- Activity Log -->
+<!--                <div class="bg-gray-800 p-4 rounded-lg">-->
+<!--                    <ActivityLog :logs="issue.activity_logs" />-->
+<!--                </div>-->
             </div>
 
             <!-- Sidebar -->

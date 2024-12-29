@@ -232,7 +232,7 @@ const toggleDropdownMenu = () => {
             </div>
         </aside>
 
-        <main class="h-auto p-4 pt-20 md:ml-64 bg-gray-50 dark:bg-gray-900">
+        <main class="h-auto p-4 pt-20 md:ml-64 dark:bg-gray-900">
             <slot />
         </main>
     </div>
