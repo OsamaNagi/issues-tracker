@@ -60,4 +60,41 @@ class IssueController extends Controller
             'assignees' => $issue->assignees,
         ]);
     }
+
+    public function edit(Project $project, Issue $issue)
+    {
+        $labels = Labels::all();
+        $projectUsers = $project->users()->get();
+
+        return Inertia::render('Issue/Edit', [
+            'project' => $project,
+            'issue' => $issue->load('labels', 'assignees'),
+            'labels' => $labels,
+            'projectUsers' => $projectUsers,
+        ]);
+    }
+
+    public function update(StoreIssueRequest $request, Project $project, Issue $issue)
+    {
+        $validatedData = $request->validated();
+
+        // Update the issue while excluding label_id and assignee_ids
+        $issue->update(Arr::except($validatedData, ['label_ids', 'assignee_ids']));
+
+        // Sync labels if provided
+        if ($request->label_ids) {
+            $issue->labels()->sync($request->label_ids);
+        } else {
+            $issue->labels()->detach();
+        }
+
+        // Sync assignees if provided
+        if ($request->assignee_ids) {
+            $issue->assignees()->sync($request->assignee_ids);
+        } else {
+            $issue->assignees()->detach();
+        }
+
+        return redirect()->route('issue.show', [$project, $issue]);
+    }
 }

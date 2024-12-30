@@ -20,6 +20,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/project/{project}/issue', [IssueController::class, 'create'])->name('issue.create');
     Route::post('/project/{project}/issue', [IssueController::class, 'store'])->name('issue.store');
     Route::get('/projects/{project}/issues/{issue}', [IssueController::class, 'show'])->name('issue.show');
+    Route::get('/projects/{project}/issues/{issue}/edit', [IssueController::class, 'edit'])->name('issue.edit');
+    Route::patch('/projects/{project}/issues/{issue}', [IssueController::class, 'update'])->name('issue.update');
 
     Route::post('/projects/{project}/issues/{issue}/comments', [CommentController::class, 'store'])->name('comment.store');
 });

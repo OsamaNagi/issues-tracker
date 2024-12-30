@@ -4,7 +4,7 @@ import CommentSection from "@/Components/CommentSection.vue";
 import {computed} from "vue";
 import {formatDistanceToNow} from "date-fns";
 import DimedLabel from "@/Components/DimedLabel.vue";
-import {useForm} from "@inertiajs/vue3";
+import {Link, useForm} from "@inertiajs/vue3";
 // import ActivityLog from "@/Components/ActivityLog.vue";
 
 const props = defineProps({
@@ -20,14 +20,9 @@ const form = useForm({
 
 // Handle form submission
 const submitForm = () => {
-    form.post(route('comment.store', { project: props.project.id, issue: props.issue.id }), {
+    form.post(route('comment.store', {project: props.project.id, issue: props.issue.id}), {
         onError: (errors) => {
             console.error('Validation errors:', errors);
-        },
-        onSuccess: () => {
-            form.reset();
-        //     todo scroll to the added comment
-
         },
     });
 };
@@ -53,15 +48,23 @@ const updatedAt = computed(() => {
                             {{ updatedAt }}
                         </p>
                     </div>
-                    <span
-                        :class="{
+                    <div class="flex gap-x-2">
+                        <span
+                            :class="{
                             'bg-green-500': issue.status === 'open',
                             'bg-indigo-600': issue.status === 'closed',
                         }"
-                        class="px-3 py-1 text-white rounded-full"
-                    >
+                            class="px-3 py-1 text-white rounded-full"
+                        >
                         {{ issue.status }}
                     </span>
+                        <Link
+                            class="px-3 py-1 text-sm font-medium text-white bg-blue-700 rounded-md hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                            :href="route('issue.edit', { project: props.project.id, issue: props.issue.id })"
+                        >
+                            Edit
+                        </Link>
+                    </div>
                 </div>
 
                 <div class="bg-gray-800 p-4 rounded-lg">
@@ -71,21 +74,24 @@ const updatedAt = computed(() => {
 
                 <h2 class="text-lg font-bold text-white">Comments</h2>
                 <div class="">
-                    <CommentSection :comments="issue.comments" />
+                    <CommentSection :comments="issue.comments"/>
                 </div>
 
                 <div class="bg-gray-800 p-4 rounded-lg">
                     <h2 class="text-lg font-bold text-white">Add Comment</h2>
                     <form @submit.prevent="submitForm">
-                        <textarea name="content" v-model="form.content" id="content" class="w-full h-24 bg-gray-700 text-gray-300 p-4 rounded-lg" placeholder="Enter your comment here"></textarea>
-                        <button type="submit" class="mt-2 px-4 py-2 bg-blue-700 text-white rounded-md">Add Comment</button>
+                        <textarea name="content" v-model="form.content" id="content"
+                                  class="w-full h-24 bg-gray-700 text-gray-300 p-4 rounded-lg"
+                                  placeholder="Enter your comment here"></textarea>
+                        <button type="submit" class="mt-2 px-4 py-2 bg-blue-700 text-white rounded-md">Add Comment
+                        </button>
                     </form>
                 </div>
 
                 <!-- Activity Log -->
-<!--                <div class="bg-gray-800 p-4 rounded-lg">-->
-<!--                    <ActivityLog :logs="issue.activity_logs" />-->
-<!--                </div>-->
+                <!--                <div class="bg-gray-800 p-4 rounded-lg">-->
+                <!--                    <ActivityLog :logs="issue.activity_logs" />-->
+                <!--                </div>-->
             </div>
 
             <!-- Sidebar -->

@@ -80,4 +80,20 @@ class ProjectController extends Controller
         ]);
     }
 
+    public function update(Request $request, Project $project)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'visibility' => 'required|string|in:public,private',
+        ]);
+
+        $project->update([
+            'name' => $request->name,
+            'description' => $request->description,
+            'visibility' => $request->visibility,
+        ]);
+
+        return redirect()->route('home', $project);
+    }
 }

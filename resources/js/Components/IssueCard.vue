@@ -47,10 +47,12 @@ const hexToRgbA = (hex, alpha = 1) => {
             <div class="flex items-center">
                 <span class="w-3 h-3 mr-3 bg-green-500 rounded-full"></span>
                 <div>
-                    <h3 class="font-semibold">
-                        {{ project.name }}/
-                        <span class="text-gray-400">{{ issue.title }}</span>
-                    </h3>
+                    <div class="flex justify-between">
+                        <h3 class="font-semibold">
+                            {{ project.name }}/
+                            <span class="text-gray-400">{{ issue.title }}</span>
+                        </h3>
+                    </div>
                     <p class="text-sm text-gray-400">
                         #{{ issue.id }} opened {{ createdAt }} by {{ issue.created_by }}
                     </p>
