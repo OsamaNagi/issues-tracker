@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -60,19 +61,6 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function addUsers(Request $request, Project $project)
-    {
-        $validated = $request->validate([
-            'user_ids' => 'required|array',
-            'user_ids.*' => 'exists:users,id',
-        ]);
-
-        // Attach users to the project
-        $project->users()->syncWithoutDetaching($validated['user_ids']);
-
-        return redirect()->route('project.show', $project);
-    }
-
     public function edit(Project $project)
     {
         return Inertia::render('Project/Edit', [
@@ -95,5 +83,45 @@ class ProjectController extends Controller
         ]);
 
         return redirect()->route('home', $project);
+    }
+
+    public function showAddUsers(Project $project)
+    {
+        // This is to prevent the project owner and the users already in the project from being added again
+        $users = User::where('id', '!=', $project->user_id)
+            ->whereDoesntHave('projects', function ($query) use ($project) {
+                $query->where('project_id', $project->id);
+            })
+            ->get();
+
+        $ProjectUsers = $project->users()->where('user_id', '!=', $project->user_id)
+            ->with('roles')
+            ->get();
+
+        return Inertia::render('Project/ShowProjectUsers', [
+            'project' => $project,
+            'projectUsers' => $ProjectUsers,
+            'users' => $users,
+        ]);
+    }
+
+    public function addUsers(Request $request, Project $project)
+    {
+        $validated = $request->validate([
+            'user_ids' => 'required|array',
+            'user_ids.*' => 'exists:users,id',
+        ]);
+
+        // Attach users to the project
+        $project->users()->syncWithoutDetaching($validated['user_ids']);
+
+        return redirect()->route('project.add-users', $project);
+    }
+
+    public function removeUser(Project $project, User $user)
+    {
+        $project->users()->detach($user);
+
+        return redirect()->route('project.add-users', $project);
     }
 }
