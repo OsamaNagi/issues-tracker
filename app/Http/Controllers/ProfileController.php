@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -40,6 +41,25 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit');
     }
 
+    public function updateAvatar(Request $request)
+    {
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user = auth()->user();
+
+        // Delete the old avatar if it exists
+        if ($user->avatar && Storage::exists($user->avatar)) {
+            Storage::delete($user->avatar);
+        }
+
+        // Store the new avatar
+        $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        $user->update(['avatar' => $avatarPath]);
+
+        return back()->with('success', 'Avatar updated successfully.');
+    }
     /**
      * Delete the user's account.
      */

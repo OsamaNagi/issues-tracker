@@ -1,52 +1,46 @@
 <script setup>
-
+import { Head, Link } from "@inertiajs/vue3";
 import {ref, computed, reactive} from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ProjectCard from "@/Components/ProjectCard.vue";
-import CreateIssueModal from "@/Components/createIssueModal.vue";
-import IssueCard from "@/Components/IssueCard.vue";
-import {Link} from "@inertiajs/vue3";
 import Heading from "@/Components/Heading.vue";
 
 const props = defineProps({
-    project: {
-        type: Object,
+    canLogin: {
+        type: Boolean,
     },
-    issues: {
+    canRegister: {
+        type: Boolean,
+    },
+    projects: {
         type: Object,
     },
 });
 
-const issues = reactive(props.issues);
+const projects = reactive(props.projects);
 
 const tab = ref('open'); // Track the selected tab
 
 // Computed property to filter projects based on the selected tab
-const filteredIssues = computed(() => {
-    return issues.filter(issue => issue.status === tab.value);
+const filteredProjects = computed(() => {
+    return projects.filter(project => project.status === tab.value);
 });
 </script>
 
 <template>
+    <Head title="Home" />
+
     <AuthenticatedLayout>
         <div class="min-h-screen">
             <Heading
-                :breadcrumbs="[
-                    { label: 'Projects', link: '/projects' },
-                    { label: props.project.name }
-                 ]"
-                heading="Issues"
+                :breadcrumbs="[{ label: 'Projects', link: '/projects' }]"
+                heading="Projects"
             />
 
-            <div class="flex items-center justify-between">
+            <div class="flex justify-end">
                 <Link
                     class="px-5 py-2 text-sm font-bold text-white bg-blue-700 rounded-md hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                    :href="route('issue.create', { project: props.project.id })">Create Issue
-                </Link>
-                <Link
-                    class="px-5 py-2 text-sm font-bold text-white bg-gray-700 rounded-md hover:bg-gray-800 focus:ring-4 focus:ring-gray-300 dark:bg-gray-600 dark:hover:bg-gray-700 focus:outline-none dark:focus:ring-gray-800"
-                    :href="route('project.ShowProjectUsers', { project: props.project.id })">Add user to project
-                </Link>
+                    :href="route('project.create')">Create Project</Link>
             </div>
 
             <div
@@ -79,15 +73,11 @@ const filteredIssues = computed(() => {
                         </button>
                     </div>
                 </div>
-                <!-- Issues List -->
-                <div v-for="issue in filteredIssues" :key="issue.id">
-                    <IssueCard :project="project" :issue="issue"/>
+                <!-- Project List -->
+                <div v-for="project in filteredProjects" :key="project.id">
+                    <ProjectCard :project="project" />
                 </div>
             </div>
         </div>
     </AuthenticatedLayout>
 </template>
-
-<style scoped>
-
-</style>

@@ -11,11 +11,12 @@ const form = useForm({
     email: '',
     password: '',
     password_confirmation: '',
+    avatar: null,
 });
 
 const submit = () => {
     form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+        onFinish: () => form.reset('password', 'password_confirmation', 'avatar'),
     });
 };
 </script>
@@ -90,6 +91,20 @@ const submit = () => {
                     class="mt-2"
                     :message="form.errors.password_confirmation"
                 />
+            </div>
+
+            <div class="mt-4">
+                <InputLabel for="avatar" value="Avatar" />
+
+                <input
+                    id="avatar"
+                    type="file"
+                    class="block w-full text-md p-1 text-gray-900 border border-gray-300 rounded-lg cursor-pointer dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                    @change="e => form.avatar = e.target.files[0]"
+                    accept="image/*"
+                />
+
+                <InputError class="mt-2" :message="form.errors.avatar" />
             </div>
 
             <div class="mt-4 flex items-center justify-end">

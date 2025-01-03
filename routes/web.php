@@ -1,18 +1,23 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\UserRoleManagementController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/', [ProjectController::class, 'index'])->name('home');
-    Route::get('/project', [ProjectController::class, 'create'])->name('project.create');
-    Route::post('/project', [ProjectController::class, 'store'])->name('project.store');
+    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/user-role-management', [UserRoleManagementController::class, 'index'])->name('user-role-management');
+
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('/project/create', [ProjectController::class, 'create'])->name('project.create');
+    Route::post('/project/create', [ProjectController::class, 'store'])->name('project.store');
     Route::get('/project/{project}', [ProjectController::class, 'show'])->name('project.show');
     Route::get('/project/{project}/edit', [ProjectController::class, 'edit'])
         ->name('project.edit')
@@ -39,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/profile', [ProfileController::class, 'updateAvatar'])->name('profile.updateAvatar');
 });
 
 require __DIR__ . '/auth.php';

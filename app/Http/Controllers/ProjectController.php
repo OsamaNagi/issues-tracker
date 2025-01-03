@@ -22,7 +22,7 @@ class ProjectController extends Controller
             })
             ->get();
 
-        return Inertia::render('Home', [
+        return Inertia::render('Projects', [
             'canLogin' => Route::has('login'),
             'canRegister' => Route::has('register'),
             'projects' => $projects,
@@ -50,7 +50,7 @@ class ProjectController extends Controller
             'visibility' => $request->visibility,
         ]);
 
-        return redirect()->route('home');
+        return redirect()->route('projects.index');
     }
 
     public function show(Project $project)
@@ -82,7 +82,7 @@ class ProjectController extends Controller
             'visibility' => $request->visibility,
         ]);
 
-        return redirect()->route('home', $project);
+        return redirect()->route('projects.index', $project);
     }
 
     public function showAddUsers(Project $project)

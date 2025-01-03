@@ -44,7 +44,7 @@ const submitForm = () => {
 
 <template>
     <AuthenticatedLayout>
-        <div class="h-screen">
+        <div class="min-h-screen">
             <div class="flex items-center justify-between">
                 <p class="text-lg font-bold text-slate-50">
                     Edit Issue: {{ issue.title }}
