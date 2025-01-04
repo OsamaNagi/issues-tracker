@@ -1,13 +1,10 @@
 <script setup>
 import {ref} from "vue";
-import {Link} from "@inertiajs/vue3";
-import Pagination from "@/Components/Pagination.vue";
+import {Link, useForm} from "@inertiajs/vue3";
 
 const props = defineProps({
     comments: Object,
 });
-
-console.log(props.comments);
 
 const toggleDropdown = ref(null);
 
@@ -74,11 +71,13 @@ const toggleDropdownMenu = (index) => {
                                 >
                             </li>
                             <li>
-                                <a
-                                    href="#"
-                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                >Remove</a
-                                >
+                                <form @submit.prevent="">
+                                    <button
+                                        type="submit"
+                                        class="block px-4 py-2  text-red-600 dark:text-red-500">
+                                        Remove
+                                    </button>
+                                </form>
                             </li>
                         </ul>
                     </div>

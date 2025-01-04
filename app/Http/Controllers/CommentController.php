@@ -22,4 +22,11 @@ class CommentController extends Controller
 
         return redirect()->route('issue.show', [$issue->project, $issue]);
     }
+
+    public function destroy(Project $project, Issue $issue, Comment $comment)
+    {
+        $comment->delete();
+
+        return redirect()->route('issue.show', [$issue->project, $issue]);
+    }
 }

@@ -14,6 +14,7 @@ use Inertia\Inertia;
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
     Route::get('/user-role-management', [UserRoleManagementController::class, 'index'])->name('user-role-management');
+    Route::get('/user-role-management/{user}', [UserRoleManagementController::class, 'update'])->name('user-role-management.update');
 
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/project/create', [ProjectController::class, 'create'])->name('project.create');
@@ -35,6 +36,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/projects/{project}/issues/{issue}', [IssueController::class, 'update'])->name('issue.update');
 
     Route::post('/projects/{project}/issues/{issue}/comments', [CommentController::class, 'store'])->name('comment.store');
+    Route::delete('/projects/{project}/issues/{issue}/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
 });
 
 
