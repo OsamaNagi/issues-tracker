@@ -3,6 +3,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import AddUserToProjectModal from "@/Components/AddUserToProjectModal.vue";
 import {useForm} from "@inertiajs/vue3";
+import {reactive} from "vue";
 
 const props = defineProps({
     project: {
@@ -16,9 +17,12 @@ const props = defineProps({
     }
 })
 
+
 const form = useForm({
     user_id: '',
 });
+
+const projectUsers = reactive(props.projectUsers.data);
 
 const submitForm = (userId) => {
     form.delete(route('project.removeUser', {project: props.project.id, user: userId}), {
@@ -63,7 +67,7 @@ const submitForm = (userId) => {
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <th scope="row"
                             class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-                            <img class="w-10 h-10 rounded-full" src="/docs/images/people/profile-picture-1.jpg"
+                            <img class="w-10 h-10 rounded-full" :src="user.avatar"
                                  alt="Jese image">
                             <div class="ps-3">
                                 <div class="text-base font-semibold">{{ user.name }}</div>

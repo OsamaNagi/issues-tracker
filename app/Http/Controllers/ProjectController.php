@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -100,7 +101,7 @@ class ProjectController extends Controller
 
         return Inertia::render('Project/ShowProjectUsers', [
             'project' => $project,
-            'projectUsers' => $ProjectUsers,
+            'projectUsers' => UserResource::collection($ProjectUsers),
             'users' => $users,
         ]);
     }

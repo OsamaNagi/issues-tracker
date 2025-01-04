@@ -34,7 +34,7 @@ const closeModal = () => {
 
 // Handle form submission
 const submitForm = () => {
-    form.post(route('project.addUsers', { project: props.project.id} ), {
+    form.post(route('project.add-users', { project: props.project.id} ), {
         onError: (errors) => {
             console.error('Validation errors:', errors);
         },

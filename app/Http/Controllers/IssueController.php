@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreIssueRequest;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\UserResource;
 use App\Models\Issue;
 use App\Models\Labels;
 use App\Models\Project;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -51,13 +54,13 @@ class IssueController extends Controller
 
     public function show(Project $project, Issue $issue)
     {
-        $issue = $issue->load(['comments.user', 'labels', 'project', 'creator', 'assignees']);
+        $issue = $issue->load(['labels', 'project', 'creator', 'assignees']);
 
         return Inertia::render('Issue/Show', [
             'project' => $project,
             'issue' => $issue,
-            'comments' => $issue->comments,
-            'assignees' => $issue->assignees,
+            'comments' => CommentResource::collection($issue->comments()->with(['user'])->paginate(5)),
+            'assignees' => UserResource::collection($issue->assignees),
         ]);
     }
 

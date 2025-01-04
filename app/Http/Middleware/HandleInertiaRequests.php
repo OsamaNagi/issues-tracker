@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
@@ -34,7 +35,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'appName' => config('app.name'),
             'auth' => [
-                'user' => $request->user(),
+                'user' => UserResource::make($request->user())->resolve($request),
             ],
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
