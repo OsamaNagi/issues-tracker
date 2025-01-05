@@ -7,15 +7,12 @@ import LabelInputField from "@/Components/LabelInputField.vue";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
 import {useForm} from "@inertiajs/vue3";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps({
     project: Object,
-    users: Object,
-});
-
-// Initialize the form
-const form = useForm({
-    user_ids: [],
+    user: Object,
+    roles: Object,
 });
 
 // Define a ref to control the modal visibility
@@ -32,9 +29,17 @@ const closeModal = () => {
     form.reset();
 };
 
+// Initialize the form
+const form = useForm({
+    role: null,
+});
+
 // Handle form submission
 const submitForm = () => {
-    form.post(route('project.add-users', { project: props.project.id} ), {
+    form.patch(route('user-role-management.update', { user: props.user.id }), {
+        onSuccess: () => {
+            closeModal();
+        },
         onError: (errors) => {
             console.error('Validation errors:', errors);
         },
@@ -70,7 +75,7 @@ const submitForm = () => {
                 <!-- Modal header -->
                 <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Add user to the project
+                        Add/Change user role
                     </h3>
                     <button
                         @click="closeModal"
@@ -92,28 +97,32 @@ const submitForm = () => {
                             for="label"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Users
+                            Roles
                         </label>
                         <v-select
-                            id="label"
-                            v-model="form.user_ids"
-                            multiple
-                            :options="users"
+                            id="role"
+                            v-model="form.role"
+                            :options="roles"
                             label="name"
-                            :reduce="user => user.id"
+                            :reduce="role => role.id"
                             class="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400  dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
-                        <p v-if="form.errors.user_id" class="text-red-500 text-sm">{{ form.errors.user_id }}</p>
+                        <p v-if="form.errors.role_id" class="text-red-500 text-sm">{{ form.errors.role_id }}</p>
                     </div>
-                    <PrimaryButton type="submit" class="flex mt-10">
-                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
-                             xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                  d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                                  clip-rule="evenodd"></path>
-                        </svg>
-                        Add User
-                    </PrimaryButton>
+                    <div class="flex justify-around">
+                        <PrimaryButton type="submit" class="flex mt-10 !uppercase">
+                            <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd"
+                                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                                      clip-rule="evenodd"></path>
+                            </svg>
+                            Save
+                        </PrimaryButton>
+                        <SecondaryButton type="button" @click="closeModal" class="flex mt-10 !bg-red-600">
+                            Cancel
+                        </SecondaryButton>
+                    </div>
                 </form>
 
             </div>

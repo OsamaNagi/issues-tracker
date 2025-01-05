@@ -8,6 +8,9 @@ import EditUserRoleModal from "@/Components/EditUserRoleModal.vue";
 const props = defineProps({
     users: {
         type: Object,
+    },
+    roles: {
+        type: Object,
     }
 })
 
@@ -56,7 +59,7 @@ const props = defineProps({
                             {{ role.name }}
                         </td>
                         <td class="px-6 py-4">
-                            <EditUserRoleModal :users="user" />
+                            <EditUserRoleModal :user="user" :roles="roles" />
                         </td>
                     </tr>
                     </tbody>
