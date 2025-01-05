@@ -24,7 +24,7 @@ const updatedAt = computed(() => {
 </script>
 
 <template>
-    <div class="flex items-center justify-between p-4 bg-gray-800 hover:bg-gray-700 transition-colors duration-100">
+    <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 hover:bg-gray-700 transition-colors duration-100">
         <Link :href="route('project.show', project.id)">
             <!-- Left Content -->
             <div class="flex items-center">
@@ -42,14 +42,14 @@ const updatedAt = computed(() => {
                         d="M3 10h11M9 21V3m-6 7h6M21 21h-6m0-6h6"
                     />
                 </svg>
-                <div class="hover:text-blue-400">
+                <div class="text-gray-900 dark:text-gray-400 hover:text-blue-400">
                     <h3 class="font-semibold capitalize">
                         @{{ project.creator.name }}'s
                         <span class="text-gray-400">
                         ({{ project.name }})
                     </span>
                     </h3>
-                    <p class="text-sm text-gray-400">
+                    <p class="text-sm  dark:text-gray-400">
                         {{ project.creator.name }} #{{ project.id }} updated {{ updatedAt }}
                     </p>
                 </div>
@@ -58,7 +58,7 @@ const updatedAt = computed(() => {
 
         <!-- Right Content -->
         <div class="flex items-center space-x-3">
-            <span class="px-2 py-1 text-sm text-gray-300 bg-gray-700 rounded"
+            <span class="px-2 py-1 text-sm text-gray-900 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded"
             >
                 {{ project.visibility }}
             </span>

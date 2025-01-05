@@ -54,7 +54,7 @@ const updatedAt = computed(() => {
                     <!-- Header -->
                     <div class="flex justify-between items-center">
                         <div>
-                            <h1 class="text-2xl font-bold text-white">
+                            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-50">
                                 {{ issue.title }} <span class="text-gray-400">#{{ issue.id }}</span>
                             </h1>
                             <p class="text-sm text-gray-400">
@@ -81,12 +81,12 @@ const updatedAt = computed(() => {
                         </div>
                     </div>
 
-                    <div class="bg-gray-800 p-4 rounded-lg">
-                        <h2 class="text-lg font-bold text-white">Description</h2>
-                        <p class="text-gray-300">{{ issue.description }}</p>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white">Description</h2>
+                        <p class="text-gray-900 dark:text-gray-300">{{ issue.description }}</p>
                     </div>
 
-                    <div class="bg-gray-800 p-4 rounded-lg">
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">
                                 Add Discussion
@@ -119,8 +119,8 @@ const updatedAt = computed(() => {
                 <!-- Sidebar -->
                 <div class="w-full lg:w-1/3 space-y-4">
                     <!-- Assignees -->
-                    <div class="bg-gray-800 p-4 rounded-lg">
-                        <h2 class="text-lg font-bold text-white">Assignees</h2>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white">Assignees</h2>
                         <ul>
                             <li
                                 v-for="user in assignees" :key="user.id"
@@ -136,8 +136,8 @@ const updatedAt = computed(() => {
                     </div>
 
                     <!-- Labels -->
-                    <div class="bg-gray-800 p-4 rounded-lg">
-                        <h2 class="text-lg font-bold text-white">Labels</h2>
+                    <div class="bg-white dark:bg-gray-800 p-4 rounded-lg">
+                        <h2 class="text-lg font-bold text-gray-900 dark:text-white">Labels</h2>
                         <div class="flex flex-wrap mt-2 space-x-2">
                             <DimedLabel
                                 v-for="label in issue.labels"

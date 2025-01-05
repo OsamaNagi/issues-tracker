@@ -2,6 +2,7 @@
 import { Head, Link } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
+import DarkModeSwitcher from "@/Components/DarkModeSwitcher.vue";
 
 const page = usePage();
 
@@ -103,6 +104,9 @@ const toggleDropdownMenu = () => {
                             ></path>
                         </svg>
                     </button>
+
+                    <DarkModeSwitcher />
+
                     <button
                         type="button"
                         class="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -279,7 +283,7 @@ const toggleDropdownMenu = () => {
             </div>
         </aside>
 
-        <main class="p-4 pt-20 bg-gray-900 md:ml-64">
+        <main class="p-4 pt-20  md:ml-64 bg-gray-50 dark:bg-gray-900">
             <slot />
         </main>
     </div>

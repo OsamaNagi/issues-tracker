@@ -41,14 +41,14 @@ const hexToRgbA = (hex, alpha = 1) => {
     <!-- Issues List -->
     <Link :href="route('issue.show', { project: project.id, issue: issue.id })" class="">
         <div
-            class="flex items-center justify-between p-4 bg-gray-800 hover:bg-gray-700 transition-colors duration-100"
+            class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 hover:bg-gray-700 transition-colors duration-100"
         >
             <!-- Left Content -->
             <div class="flex items-center">
                 <span class="w-3 h-3 mr-3 bg-green-500 rounded-full"></span>
                 <div>
                     <div class="flex justify-between">
-                        <h3 class="font-semibold">
+                        <h3 class="font-semibold text-gray-900 dark:text-gray-50">
                             {{ project.name }}/
                             <span class="text-gray-400">{{ issue.title }}</span>
                         </h3>

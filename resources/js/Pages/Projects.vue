@@ -44,7 +44,7 @@ const filteredProjects = computed(() => {
             </div>
 
             <div
-                class="mx-auto mt-6 text-white bg-gray-900 border border-gray-700 rounded-lg"
+                class="mx-auto mt-6 text-white dark:bg-gray-900 border rounded-lg dark:border-gray-800 border-gray-50"
             >
                 <!-- Tabs -->
                 <div class="flex items-center justify-between p-2">
