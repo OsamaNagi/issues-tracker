@@ -3,7 +3,11 @@ import {Head} from "@inertiajs/vue3";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Heading from "@/Components/Heading.vue";
-import AreaChart from "@/Components/Charts/AreaChart.vue";
+import ProjectBarChart from "@/Components/Charts/ProjectBarChart.vue";
+import ProjectVisibilityChart from "@/Components/Charts/ProjectVisibilityChart.vue";
+import UserDonutChart from "@/Components/Charts/UserDonutChart.vue";
+import UsersTrafficChart from "@/Components/Charts/UsersTrafficChart.vue";
+import IssueLabelsChart from "@/Components/Charts/IssueLabelsChart.vue";
 
 const props = defineProps({
     publicProjects: {
@@ -12,6 +16,14 @@ const props = defineProps({
     },
     privateProjects: {
         type: Number,
+        required: true,
+    },
+    userRoles: {
+        type: Array,
+        required: true,
+    },
+    series: {
+        type: Array,
         required: true,
     },
     breadcrumbs: {
@@ -36,34 +48,20 @@ const props = defineProps({
                 heading="Home"
             />
 
-            <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6">
-                <div class="flex justify-between border-gray-200 border-b dark:border-gray-700 pb-3">
-                    <dl>
-                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Projects</dt>
-                        <dd class="leading-none text-3xl font-bold text-gray-900 dark:text-white">
-                            {{ publicProjects + privateProjects }}
-                        </dd>
-                    </dl>
-                </div>
-
-                <div class="grid grid-cols-2 py-3">
-                    <dl>
-                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Public</dt>
-                        <dd class="leading-none text-xl font-bold text-green-500 dark:text-green-400">
-                            {{ publicProjects }}
-                        </dd>
-                    </dl>
-                    <dl>
-                        <dt class="text-base font-normal text-gray-500 dark:text-gray-400 pb-1">Private</dt>
-                        <dd class="leading-none text-xl font-bold text-indigo-600 dark:text-indigo-500">
-                            {{ privateProjects }}
-                        </dd>
-                    </dl>
-                </div>
-
-                <AreaChart
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-8 px-10">
+                <ProjectVisibilityChart
                     :publicProjects="publicProjects"
                     :privateProjects="privateProjects"
+                />
+
+                <UsersTrafficChart
+                    :userRoles="userRoles"
+                    :series="series"
+                />
+
+                <IssueLabelsChart
+                    :labels="labels"
+                    :series="series"
                 />
             </div>
         </div>
