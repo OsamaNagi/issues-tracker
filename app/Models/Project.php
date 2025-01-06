@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @method static Builder private()
+ * @method static Builder public()
+ */
 class Project extends Model
 {
     use HasFactory, Notifiable;
@@ -20,6 +25,16 @@ class Project extends Model
         'status',
         'visibility',
     ];
+
+    protected function scopePrivate(Builder $query): Builder
+    {
+        return $query->where('visibility', 'private');
+    }
+
+    protected function scopePublic(Builder $query): Builder
+    {
+        return $query->where('visibility', 'public');
+    }
 
     public function user(): BelongsTo
     {

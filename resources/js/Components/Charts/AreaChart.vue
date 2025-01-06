@@ -2,68 +2,37 @@
 import { ref } from "vue";
 import ApexCharts from "vue3-apexcharts";
 
-const chartOptions = {
-    chart: {
-        height: "100%",
-        type: "area",
-        toolbar: {
-            show: false,
-        },
-        fontFamily: "Inter, sans-serif",
+const props = defineProps({
+    publicProjects: {
+        type: Number,
+        required: true,
     },
-    fill: {
-        type: "gradient",
-        gradient: {
-            opacityFrom: 0.55,
-            opacityTo: 0,
-            shade: "#1C64F2",
-            gradientToColors: ["#1C64F2"],
-        },
+    privateProjects: {
+        type: Number,
+        required: true,
     },
-    dataLabels: {
-        enabled: false,
-    },
-    stroke: {
-        width: 6,
-    },
-    grid: {
-        show: false,
-    },
-    series: [
-        {
-            name: "New users",
-            data: [6500, 6418, 6456, 6526, 6356, 6456],
-            color: "#1A56DB",
-        },
-    ],
+});
+
+const series = ref([{
+    name: 'visibility',
+    data: [props.publicProjects, props.privateProjects]
+}]);
+
+const options = ref({
     xaxis: {
-        categories: [
-            "01 February",
-            "02 February",
-            "03 February",
-            "04 February",
-            "05 February",
-            "06 February",
-            "07 February",
-        ],
-        labels: {
-            show: true,
-        },
+        categories: ['public', 'private']
     },
-    yaxis: {
-        labels: {
-            show: true,
-        },
-    },
-};
+})
+
 </script>
 
 <template>
-    <div class="p-6 bg-white rounded-lg shadow dark:bg-gray-800">
-        <div class="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-            Area Chart
-        </div>
-        <ApexCharts type="area" width="100%" :options="chartOptions" />
+    <div class="bg-white dark:bg-gray-800">
+        <ApexCharts
+            type="bar"
+            :series="series"
+            :options="options"
+        />
     </div>
 </template>
 
