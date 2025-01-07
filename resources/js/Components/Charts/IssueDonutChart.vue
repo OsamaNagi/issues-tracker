@@ -1,26 +1,26 @@
 <script setup>
-import {ref, watch} from "vue";
+import { ref, watch } from "vue";
 import ApexCharts from "vue3-apexcharts";
 
 const props = defineProps({
-    labels: {
+    userIssuesCount: {
+        type: Number,
+        required: true,
+    },
+    userIssueLabels: {
         type: Array,
         required: true,
     },
-    series: {
-        type: Array,
-        required: true,
-    },
-})
+});
 
-// Options configuration
+// Reactive chart options
 const chartOptions = ref({
     chart: {
         height: 320,
         width: "100%",
         type: "donut",
     },
-    colors: ["#1C64F2", "#16BDCA", "#FDBA8C", "#E74694"],
+    colors: [],
     stroke: {
         colors: ["transparent"],
     },
@@ -37,11 +37,10 @@ const chartOptions = ref({
                     total: {
                         showAlways: true,
                         show: true,
-                        label: "Unique visitors",
+                        label: "Total Issues",
                         fontFamily: "Inter, sans-serif",
-                        formatter: function (w) {
-                            const sum = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                            return sum ;
+                        formatter: function () {
+                            return props.userIssuesCount;
                         },
                     },
                     value: {
@@ -62,7 +61,7 @@ const chartOptions = ref({
             top: -2,
         },
     },
-    labels: ["Admin", "Manager", "Developer", "Client"],
+    labels: [],
     dataLabels: {
         enabled: false,
     },
@@ -92,31 +91,29 @@ const chartOptions = ref({
     },
 });
 
-// Reactive series and labels
+// Reactive series and colors
 const chartSeries = ref([]);
+const chartColors = ref([]);
 const chartLabels = ref([]);
 
 // Watch for changes in props and update chart data
 watch(
-    () => props.series,
-    (newSeries) => {
-        chartSeries.value = newSeries;
-    },
-    { immediate: true }
-);
-
-watch(
-    () => props.labels,
+    () => props.userIssueLabels,
     (newLabels) => {
-        chartLabels.value = newLabels;
-        chartOptions.value.labels = newLabels; // Update chart options
+        console.log("newLabels:", newLabels); // Debugging line
+        chartLabels.value = newLabels.map((label) => label.name); // Extract names
+        chartColors.value = newLabels.map((label) => label.color); // Extract colors
+        chartSeries.value = newLabels.map((label) => label.count); // Use count for series
+        chartOptions.value.labels = chartLabels.value;
+        chartOptions.value.colors = chartColors.value;
     },
     { immediate: true }
 );
 </script>
 
 <template>
-    <div class="bg-white dark:bg-gray-800">
+    <div class="p-4 bg-white dark:bg-gray-800">
+        <!-- Chart -->
         <ApexCharts
             type="donut"
             :options="chartOptions"

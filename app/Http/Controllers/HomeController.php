@@ -27,15 +27,31 @@ class HomeController extends Controller
         $userRoles = array_keys($roleCounts);
         $series = array_values($roleCounts);
 
-        // get the current user total issues count and the labels for the chart
-        $userIssues = $user->issues()->count();
-        $labels = Labels::all()->pluck('name')->toArray();
+        // Count all user issues
+        $userIssuesCount = $user->issues()->count();
+
+        // Get labels associated with the user's issues
+        $userIssueLabels = $user->issues()
+            ->with('labels') // Assuming 'labels' is the relationship on the Issue model
+            ->get()
+            ->pluck('labels') // Extract labels collection
+            ->flatten() // Flatten nested label collections
+            ->unique('id') // Remove duplicates based on label ID
+            ->map(function ($label) {
+                return [
+                    'name' => $label->name,
+                    'color' => $label->color,
+                    'count' => $label->issues->count(),
+                ];
+            })->values();
 
         return Inertia::render('Home', [
             'publicProjects' => $publicProjects,
             'privateProjects' => $privateProjects,
             'userRoles' => $userRoles,
             'series' => $series,
+            'userIssuesCount' => $userIssuesCount,
+            'userIssueLabels' => $userIssueLabels,
         ]);
     }
 }

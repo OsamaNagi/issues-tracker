@@ -1,5 +1,5 @@
 <script setup>
-import {Head} from "@inertiajs/vue3";
+import { Head } from "@inertiajs/vue3";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Heading from "@/Components/Heading.vue";
@@ -26,6 +26,14 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    userIssuesCount: {
+        type: Number,
+        required: true,
+    },
+    userIssueLabels: {
+        type: Array,
+        required: true,
+    },
     breadcrumbs: {
         type: Array,
         required: true,
@@ -34,12 +42,11 @@ const props = defineProps({
         type: String,
         required: true,
     },
-})
-
+});
 </script>
 
 <template>
-    <Head title="Home"/>
+    <Head title="Home" />
 
     <AuthenticatedLayout>
         <div class="min-h-screen">
@@ -48,20 +55,17 @@ const props = defineProps({
                 heading="Home"
             />
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-8 px-10">
+            <div class="grid grid-cols-1 px-10 sm:grid-cols-2 gap-x-4 gap-y-8">
                 <ProjectVisibilityChart
                     :publicProjects="publicProjects"
                     :privateProjects="privateProjects"
                 />
 
-                <UsersTrafficChart
-                    :userRoles="userRoles"
-                    :series="series"
-                />
+                <UsersTrafficChart :userRoles="userRoles" :series="series" />
 
                 <IssueLabelsChart
-                    :labels="labels"
-                    :series="series"
+                    :userIssuesCount="userIssuesCount"
+                    :userIssueLabels="userIssueLabels"
                 />
             </div>
         </div>

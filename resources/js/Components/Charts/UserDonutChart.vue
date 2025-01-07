@@ -1,5 +1,5 @@
 <script setup>
-import {ref, watch} from "vue";
+import { ref, watch } from "vue";
 import ApexCharts from "vue3-apexcharts";
 
 const props = defineProps({
@@ -11,7 +11,7 @@ const props = defineProps({
         type: Array,
         required: true,
     },
-})
+});
 
 // Options configuration
 const chartOptions = ref({
@@ -40,8 +40,11 @@ const chartOptions = ref({
                         label: "Unique visitors",
                         fontFamily: "Inter, sans-serif",
                         formatter: function (w) {
-                            const sum = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                            return sum ;
+                            const sum = w.globals.seriesTotals.reduce(
+                                (a, b) => a + b,
+                                0
+                            );
+                            return sum;
                         },
                     },
                     value: {
