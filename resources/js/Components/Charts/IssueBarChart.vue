@@ -3,26 +3,22 @@ import { ref } from "vue";
 import ApexCharts from "vue3-apexcharts";
 
 const props = defineProps({
-    publicProjects: {
-        type: Number,
-        required: true,
-    },
-    privateProjects: {
-        type: Number,
+    userIssuesPriority: {
+        type: Array,
         required: true,
     },
 });
 
 const series = ref([
     {
-        name: "Visibility",
-        data: [props.publicProjects, props.privateProjects],
+        name: props.userIssuesPriority.map((priority) => priority.name),
+        data: props.userIssuesPriority.map((priority) => priority.count),
     },
 ]);
 
 const options = ref({
     xaxis: {
-        categories: ["public", "private"],
+        categories: props.userIssuesPriority.map((priority) => priority.name),
     },
 });
 </script>

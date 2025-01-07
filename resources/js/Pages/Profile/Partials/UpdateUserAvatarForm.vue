@@ -1,37 +1,39 @@
 <script setup>
-import PrimaryButton from '@/Components/PrimaryButton.vue';
-import { Link, useForm, usePage } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
+import { ref } from "vue";
 
 const user = usePage().props.auth.user;
 
 // Form data for avatar upload
 const form = useForm({
-    avatar: null, // File to upload
+    avatar: user.avatar,
 });
 
-const avatarPreview = ref(user.avatar ? `/storage/${user.avatar}` : '/default-avatar.png'); // URL for avatar preview
+const avatarPreview = ref(
+    user.avatar ? `/storage/${user.avatar}` : "/default-avatar.png"
+);
 
-// Update the avatar preview when a file is selected
 const updateAvatarPreview = (event) => {
     const file = event.target.files[0];
     if (file) {
         form.avatar = file;
-        avatarPreview.value = URL.createObjectURL(file); // Preview the selected file
+        avatarPreview.value = URL.createObjectURL(file);
     }
 };
 
 // Submit the form to update the avatar
 const submitForm = () => {
-    form.post(route('profile.updateAvatar'), {
+    form.post(route("profile.updateAvatar"), {
         preserveScroll: true,
         onSuccess: () => {
-            avatarPreview.value = form.avatar ? avatarPreview.value : user.avatar;
+            avatarPreview.value = form.avatar
+                ? avatarPreview.value
+                : user.avatar;
         },
     });
 };
 </script>
-
 
 <template>
     <section>
@@ -50,7 +52,7 @@ const submitForm = () => {
                 <div class="relative">
                     <!-- Avatar Preview -->
                     <img
-                        class="w-36 h-36 mb-3 rounded-full shadow-lg"
+                        class="mb-3 rounded-full shadow-lg w-36 h-36"
                         :src="avatarPreview"
                         alt="User Avatar"
                     />
@@ -58,7 +60,7 @@ const submitForm = () => {
                     <!-- Change Avatar Input -->
                     <label
                         for="avatar"
-                        class="absolute bottom-0 right-0 bg-blue-600 text-white px-3 py-1 text-xs rounded-full cursor-pointer"
+                        class="absolute bottom-0 right-0 px-3 py-1 text-xs text-white bg-blue-600 rounded-full cursor-pointer"
                     >
                         Change
                     </label>

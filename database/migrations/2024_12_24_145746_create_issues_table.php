@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('status')->default(IssueStatusEnum::OPEN);
-            $table->string('priority')->default(IssuePriorityLevelEnum::MEDIUM);
+            $table->string('priority')->default(IssuePriorityLevelEnum::LOW);
             $table->foreignId('assignee_id')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->timestamps();

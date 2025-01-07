@@ -23,7 +23,7 @@ const props = defineProps({
                 <h5
                     class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1"
                 >
-                    My Issues
+                    My issues
                 </h5>
             </div>
         </div>

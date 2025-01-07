@@ -8,6 +8,7 @@ import ProjectVisibilityChart from "@/Components/Charts/ProjectVisibilityChart.v
 import UserDonutChart from "@/Components/Charts/UserDonutChart.vue";
 import UsersTrafficChart from "@/Components/Charts/UsersTrafficChart.vue";
 import IssueLabelsChart from "@/Components/Charts/IssueLabelsChart.vue";
+import IssuePriorityChart from "@/Components/Charts/IssuePriorityChart.vue";
 
 const props = defineProps({
     publicProjects: {
@@ -34,6 +35,10 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    userIssuesPriority: {
+        type: Array,
+        required: true,
+    },
     breadcrumbs: {
         type: Array,
         required: true,
@@ -55,7 +60,9 @@ const props = defineProps({
                 heading="Home"
             />
 
-            <div class="grid grid-cols-1 px-10 sm:grid-cols-2 gap-x-4 gap-y-8">
+            <div
+                class="grid grid-cols-1 gap-x-4 gap-y-8 justify-items-center sm:grid-cols-2"
+            >
                 <ProjectVisibilityChart
                     :publicProjects="publicProjects"
                     :privateProjects="privateProjects"
@@ -66,6 +73,11 @@ const props = defineProps({
                 <IssueLabelsChart
                     :userIssuesCount="userIssuesCount"
                     :userIssueLabels="userIssueLabels"
+                />
+
+                <IssuePriorityChart
+                    :userIssuesPriority="userIssuesPriority"
+                    :userIssuesCount="userIssuesCount"
                 />
             </div>
         </div>

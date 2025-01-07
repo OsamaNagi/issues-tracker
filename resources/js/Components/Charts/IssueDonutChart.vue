@@ -100,7 +100,6 @@ const chartLabels = ref([]);
 watch(
     () => props.userIssueLabels,
     (newLabels) => {
-        console.log("newLabels:", newLabels); // Debugging line
         chartLabels.value = newLabels.map((label) => label.name); // Extract names
         chartColors.value = newLabels.map((label) => label.color); // Extract colors
         chartSeries.value = newLabels.map((label) => label.count); // Use count for series

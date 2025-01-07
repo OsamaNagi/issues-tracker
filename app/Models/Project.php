@@ -26,14 +26,26 @@ class Project extends Model
         'visibility',
     ];
 
-    protected function scopePrivate(Builder $query): Builder
-    {
-        return $query->where('visibility', 'private');
-    }
-
     protected function scopePublic(Builder $query): Builder
     {
-        return $query->where('visibility', 'public');
+        $user = auth()->user();
+
+        return $query->where('visibility', 'public')
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhereHas('users', fn($query) => $query->where('user_id', $user->id));
+            });
+    }
+
+    protected function scopePrivate(Builder $query): Builder
+    {
+        $user = auth()->user();
+
+        return $query->where('visibility', 'private')
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhereHas('users', fn($query) => $query->where('user_id', $user->id));
+            });
     }
 
     public function user(): BelongsTo

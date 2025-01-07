@@ -14,14 +14,8 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
-        $publicProjects = Project::where('user_id', $user->id)
-            ->orWhereHas('users', fn($query) => $query->where('user_id', $user->id))
-            ->public()
-            ->count();
-        $privateProjects = Project::where('user_id', $user->id)
-            ->orWhereHas('users', fn($query) => $query->where('user_id', $user->id))
-            ->private()
-            ->count();
+        $publicProjects = Project::query()->public()->count();
+        $privateProjects = Project::query()->private()->count();
 
         // Get the count of users with each role
         $roleCounts = User::with('roles')
@@ -35,6 +29,15 @@ class HomeController extends Controller
 
         // Count all user issues
         $userIssuesCount = $user->issues()->count();
+
+        // get all user issues with their priority
+        $userIssuesPriority = $user->issues
+            ->groupBy('priority')
+            ->map(fn($group) => [
+                'name' => $group->first()->priority,
+                'count' => $group->count(),
+            ])
+            ->values();
 
         // Get labels associated with the user's issues
         $userIssueLabels = $user->issues()
@@ -58,6 +61,7 @@ class HomeController extends Controller
             'series' => $series,
             'userIssuesCount' => $userIssuesCount,
             'userIssueLabels' => $userIssueLabels,
+            'userIssuesPriority' => $userIssuesPriority,
         ]);
     }
 }

@@ -1,13 +1,13 @@
 <script setup>
-import ProjectBarChart from "@/Components/Charts/ProjectBarChart.vue";
+import IssueBarChart from "@/Components/Charts/IssueBarChart.vue";
 
 const props = defineProps({
-    publicProjects: {
+    userIssuesCount: {
         type: Number,
         required: true,
     },
-    privateProjects: {
-        type: Number,
+    userIssuesPriority: {
+        type: Array,
         required: true,
     },
 });
@@ -24,47 +24,32 @@ const props = defineProps({
                 <dt
                     class="text-xl font-bold leading-none text-gray-900 dark:text-white pe-1"
                 >
-                    My projects
+                    My issues priority
                 </dt>
                 <dd
                     class="mt-1 text-3xl font-bold leading-none text-gray-900 dark:text-white"
                 >
-                    {{ publicProjects + privateProjects }}
+                    {{ userIssuesCount }}
                 </dd>
             </dl>
         </div>
 
-        <div class="grid grid-cols-2 py-3">
-            <dl>
+        <div class="grid grid-cols-4 py-3">
+            <dl v-for="priority in userIssuesPriority" :key="priority.id">
                 <dt
                     class="pb-1 text-base font-normal text-gray-500 dark:text-gray-400"
                 >
-                    Public
+                    {{ priority.name }}
                 </dt>
                 <dd
-                    class="text-xl font-bold leading-none text-green-500 dark:text-green-400"
+                    class="text-xl font-bold leading-none text-gray-500 dark:text-gray-400"
                 >
-                    {{ publicProjects }}
-                </dd>
-            </dl>
-            <dl>
-                <dt
-                    class="pb-1 text-base font-normal text-gray-500 dark:text-gray-400"
-                >
-                    Private
-                </dt>
-                <dd
-                    class="text-xl font-bold leading-none text-indigo-600 dark:text-indigo-500"
-                >
-                    {{ privateProjects }}
+                    {{ priority.count }}
                 </dd>
             </dl>
         </div>
 
-        <ProjectBarChart
-            :publicProjects="publicProjects"
-            :privateProjects="privateProjects"
-        />
+        <IssueBarChart :userIssuesPriority="userIssuesPriority" />
     </div>
 </template>
 
