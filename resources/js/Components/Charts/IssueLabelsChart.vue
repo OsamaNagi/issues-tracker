@@ -1,5 +1,6 @@
 <script setup>
 import IssueDonutChart from "@/Components/Charts/IssueDonutChart.vue";
+import EmptyState from "@/Components/EmptyState.vue";
 
 const props = defineProps({
     userIssuesCount: {
@@ -29,7 +30,11 @@ const props = defineProps({
 
         <!-- Donut Chart -->
         <div class="py-6" id="donut-chart">
+            <EmptyState v-if="userIssueLabels.length === 0">
+                No issues found.
+            </EmptyState>
             <IssueDonutChart
+                v-else
                 :userIssuesCount="userIssuesCount"
                 :userIssueLabels="userIssueLabels"
             />

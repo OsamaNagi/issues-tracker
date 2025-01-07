@@ -14,8 +14,14 @@ class HomeController extends Controller
     {
         $user = auth()->user();
 
-        $publicProjects = Project::public()->count();
-        $privateProjects = Project::private()->count();
+        $publicProjects = Project::where('user_id', $user->id)
+            ->orWhereHas('users', fn($query) => $query->where('user_id', $user->id))
+            ->public()
+            ->count();
+        $privateProjects = Project::where('user_id', $user->id)
+            ->orWhereHas('users', fn($query) => $query->where('user_id', $user->id))
+            ->private()
+            ->count();
 
         // Get the count of users with each role
         $roleCounts = User::with('roles')

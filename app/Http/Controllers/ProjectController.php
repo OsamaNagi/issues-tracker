@@ -21,7 +21,7 @@ class ProjectController extends Controller
             ->orWhereHas('users', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
-            ->get();
+            ->paginate(10);
 
         return Inertia::render('Projects', [
             'canLogin' => Route::has('login'),
@@ -56,9 +56,11 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
+        $issues = $project->issues()->with('labels')->paginate(10);
+
         return Inertia::render('Project/Show', [
             'project' => $project->load('users', 'issues'),
-            'issues' => $project->issues->load('labels')
+            'issues' => $issues
         ]);
     }
 

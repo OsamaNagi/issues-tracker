@@ -1,9 +1,10 @@
 <script setup>
 import { Head, Link } from "@inertiajs/vue3";
-import {ref, computed, reactive} from "vue";
+import { ref, computed, reactive } from "vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ProjectCard from "@/Components/ProjectCard.vue";
 import Heading from "@/Components/Heading.vue";
+import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
     canLogin: {
@@ -19,11 +20,11 @@ const props = defineProps({
 
 const projects = reactive(props.projects);
 
-const tab = ref('open'); // Track the selected tab
+const tab = ref("open"); // Track the selected tab
 
 // Computed property to filter projects based on the selected tab
 const filteredProjects = computed(() => {
-    return projects.filter(project => project.status === tab.value);
+    return projects.data.filter((project) => project.status === tab.value);
 });
 </script>
 
@@ -40,11 +41,13 @@ const filteredProjects = computed(() => {
             <div class="flex justify-end">
                 <Link
                     class="px-5 py-2 text-sm font-bold text-white bg-blue-700 rounded-md hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-                    :href="route('project.create')">Create Project</Link>
+                    :href="route('project.create')"
+                    >Create Project</Link
+                >
             </div>
 
             <div
-                class="mx-auto mt-6 text-white dark:bg-gray-900 border rounded-lg dark:border-gray-800 border-gray-50"
+                class="mx-auto mt-6 text-white border rounded-lg dark:bg-gray-900 dark:border-gray-800 border-gray-50"
             >
                 <!-- Tabs -->
                 <div class="flex items-center justify-between p-2">
@@ -77,6 +80,11 @@ const filteredProjects = computed(() => {
                 <div v-for="project in filteredProjects" :key="project.id">
                     <ProjectCard :project="project" />
                 </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="mt-6">
+                <Pagination :links="projects.links" />
             </div>
         </div>
     </AuthenticatedLayout>

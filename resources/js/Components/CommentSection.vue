@@ -1,6 +1,7 @@
 <script setup>
-import {ref} from "vue";
-import {Link, useForm} from "@inertiajs/vue3";
+import { ref } from "vue";
+import { Link, useForm } from "@inertiajs/vue3";
+import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
     comments: Object,
@@ -67,14 +68,15 @@ const toggleDropdownMenu = (index) => {
                                 <a
                                     href="#"
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                >Edit</a
+                                    >Edit</a
                                 >
                             </li>
                             <li>
                                 <form @submit.prevent="">
                                     <button
                                         type="submit"
-                                        class="block px-4 py-2  text-red-600 dark:text-red-500">
+                                        class="block px-4 py-2 text-red-600 dark:text-red-500"
+                                    >
                                         Remove
                                     </button>
                                 </form>
@@ -110,19 +112,8 @@ const toggleDropdownMenu = (index) => {
                 </button>
             </div>
         </article>
+        {{ console.log(comments) }}
 
-        <div >
-            <Link
-                v-for="link in comments.meta.links"
-                :href="link.url"
-                v-html="link.label"
-                class="px-3 py-1 mx-1.5 w-full text-sm font-medium rounded-md
-                     hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
-                     dark:hover:bg-blue-700 dark:focus:ring-blue-800
-                     transition-colors
-                     text-white bg-blue-700
-                     sm:px-4 sm:py-2"
-            />
-        </div>
+        <Pagination :links="comments.meta.links" />
     </div>
 </template>
