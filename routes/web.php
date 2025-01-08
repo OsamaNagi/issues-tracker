@@ -23,10 +23,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/project/{project}/edit', [ProjectController::class, 'edit'])
         ->name('project.edit')
         ->can('edit', 'project');
+
     Route::patch('/project/{project}', [ProjectController::class, 'update'])->name('project.update');
     Route::get('/project/{project}/add-users', [ProjectController::class, 'showAddUsers'])->name('project.ShowProjectUsers');
-    Route::post('/project/{project}/add-users', [ProjectController::class, 'addUsers'])->name('project.add-users');
-    Route::delete('/project/{project}/add-users/{user}', [ProjectController::class, 'removeUser'])->name('project.removeUser');
+    Route::post('/project/{project}/add-users', [ProjectController::class, 'addUsers'])
+        ->name('project.add-users')
+        ->can('add', 'project');
+
+    Route::delete('/project/{project}/add-users/{user}', [ProjectController::class, 'removeUser'])
+        ->name('project.removeUser')
+        ->can('delete', 'project');
 
     Route::get('/project/{project}/issue', [IssueController::class, 'create'])->name('issue.create');
     Route::post('/project/{project}/issue', [IssueController::class, 'store'])->name('issue.store');

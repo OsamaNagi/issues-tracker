@@ -51,7 +51,7 @@ const filteredIssues = computed(() => {
                             project: props.project.id,
                         })
                     "
-                    >Add user to project
+                    >Users in project
                 </Link>
             </div>
 

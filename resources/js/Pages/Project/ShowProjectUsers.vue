@@ -42,9 +42,7 @@ const submitForm = (userId) => {
     <AuthenticatedLayout>
         <div class="min-h-screen">
             <div class="flex items-center justify-between">
-                <p class="text-lg font-bold text-slate-50">
-                    Add users to project
-                </p>
+                <p class="text-lg font-bold text-slate-50">Users in project</p>
 
                 <div>
                     <AddUserToProjectModal :users="users" :project="project" />
