@@ -54,6 +54,7 @@ class NewIssueOpenedNotification extends Notification
         return [
             'issue_id' => $this->issue->id,
             'project_id' => $this->issue->project_id,
+            'user_avatar' => $this->issue->creator->avatar,
             'title' => $this->issue->title,
             'project_name' => $this->issue->project->name,
             'created_by' => $this->issue->creator->name,

@@ -6,10 +6,7 @@ import { computed } from "vue";
 const page = usePage();
 
 const notificationsCount = computed(() => page.props.notificationsCount);
-const notifications = computed(() => page.props.notifications);
-
-console.log(notificationsCount);
-console.log(notifications.value);
+const notifications = computed(() => page.props.notifications?.data);
 
 const toggleNotification = () => {
     const dropdownNotification = document.getElementById(
@@ -58,62 +55,63 @@ const toggleNotification = () => {
             Notifications
         </div>
         <div class="divide-y divide-gray-100 dark:divide-gray-700">
-            <div class="py-4" v-if="notifications === 0">
+            <div class="py-4" v-if="notificationsCount === 0">
                 <EmptyState>
                     <div class="text-sm text-gray-500 dark:text-gray-400">
                         No new notifications
                     </div>
                 </EmptyState>
             </div>
-            <a
-                v-else
-                v-for="notification in notifications"
-                :key="notification.id"
-                href="#"
-                class="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-                <div class="flex-shrink-0">
-                    <img
-                        class="rounded-full w-11 h-11"
-                        src=""
-                        alt="Leslie image"
-                    />
-                    <div
-                        class="absolute flex items-center justify-center w-5 h-5 -mt-5 bg-green-400 border border-white rounded-full ms-6 dark:border-gray-800"
-                    >
-                        <svg
-                            class="w-2 h-2 text-white"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 20 18"
+            <div v-else>
+                <a
+                    v-for="notification in notifications"
+                    :key="notification.id"
+                    href="#"
+                    class="flex px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                    <div class="flex-shrink-0">
+                        <img
+                            class="rounded-full w-11 h-11"
+                            :src="notification.data.user_avatar"
+                            alt="Leslie image"
+                        />
+                        <div
+                            class="absolute flex items-center justify-center w-5 h-5 -mt-5 bg-green-400 border border-white rounded-full ms-6 dark:border-gray-800"
                         >
-                            <path
-                                d="M18 0H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2v4a1 1 0 0 0 1.707.707L10.414 13H18a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5 4h2a1 1 0 1 1 0 2h-2a1 1 0 1 1 0-2ZM5 4h5a1 1 0 1 1 0 2H5a1 1 0 0 1 0-2Zm2 5H5a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Zm9 0h-6a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Z"
-                            />
-                        </svg>
+                            <svg
+                                class="w-2 h-2 text-white"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 20 18"
+                            >
+                                <path
+                                    d="M18 0H2a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2v4a1 1 0 0 0 1.707.707L10.414 13H18a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5 4h2a1 1 0 1 1 0 2h-2a1 1 0 1 1 0-2ZM5 4h5a1 1 0 1 1 0 2H5a1 1 0 0 1 0-2Zm2 5H5a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Zm9 0h-6a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Z"
+                                />
+                            </svg>
+                        </div>
                     </div>
-                </div>
-                <div class="w-full ps-3">
-                    <div
-                        class="text-gray-500 text-sm mb-1.5 dark:text-gray-400"
-                    >
-                        <span
-                            class="font-semibold text-gray-900 dark:text-white"
+                    <div class="w-full ps-3">
+                        <div
+                            class="text-gray-500 text-sm mb-1.5 dark:text-gray-400"
                         >
-                            @{{ notification.data.created_by }}
-                        </span>
-                        opened a new issue in
-                        <span class="font-medium text-blue-500" href="#">
-                            {{ notification.data.project_name }}
-                        </span>
-                        {{ notification.data.title }}
+                            <span
+                                class="font-semibold text-gray-900 dark:text-white"
+                            >
+                                @{{ notification.data.created_by }}
+                            </span>
+                            opened a new issue in
+                            <span class="font-medium text-blue-500" href="#">
+                                {{ notification.data.project_name }}
+                            </span>
+                            {{ notification.data.title }}
+                        </div>
+                        <div class="text-xs text-blue-600 dark:text-blue-500">
+                            {{ notification.created_at_human }}
+                        </div>
                     </div>
-                    <div class="text-xs text-blue-600 dark:text-blue-500">
-                        1 hour ago
-                    </div>
-                </div>
-            </a>
+                </a>
+            </div>
         </div>
         <a
             href="#"
