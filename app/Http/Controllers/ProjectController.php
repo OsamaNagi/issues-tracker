@@ -24,8 +24,6 @@ class ProjectController extends Controller
             ->paginate(10);
 
         return Inertia::render('Projects', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
             'projects' => $projects,
         ]);
     }

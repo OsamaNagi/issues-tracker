@@ -41,10 +41,16 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'flash' => [
-                'success' => $request->session()->get('success'),
-                'error' => $request->session()->get('error'),
-            ],
+            'notificationsCount' => function () {
+                // Retrieve unread notifications for the authenticated user
+                $user = auth()->user();
+                return $user ? $user->unreadNotifications->count() : 0;
+            },
+            'notifications' => function () {
+                // Retrieve unread notifications for the authenticated user
+                $user = auth()->user();
+                return $user ? $user->notifications : [];
+            },
         ];
     }
 }
