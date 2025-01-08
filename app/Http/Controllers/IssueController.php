@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Issue;
 use App\Models\Labels;
 use App\Models\Project;
+use App\Notifications\NewIssueOpenedNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
@@ -48,6 +49,14 @@ class IssueController extends Controller
         if ($request->assignee_ids) {
             $issue->assignees()->attach($request->assignee_ids);
         }
+
+        // notify the project users about the new issue created in the project by the user who created it
+        $project->users()
+            ->where('users.id', '!=', auth()->id())
+            ->get()
+            ->each(function ($user) use ($issue) {
+                $user->notify(new NewIssueOpenedNotification($issue));
+            });
 
         return redirect()->route('project.show', $project);
     }

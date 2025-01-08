@@ -3,19 +3,11 @@ import { Head, Link } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import DarkModeSwitcher from "@/Components/DarkModeSwitcher.vue";
+import NotificationBadge from "@/Components/NotificationBadge.vue";
 
 const page = usePage();
 
 const user = computed(() => page.props.auth.user);
-
-defineProps({
-    canLogin: {
-        type: Boolean,
-    },
-    canRegister: {
-        type: Boolean,
-    },
-});
 
 const toggleDropdown = ref(false);
 
@@ -102,67 +94,75 @@ const toggleSideBar = () => {
                         >
                     </a>
                 </div>
-                <div class="flex items-center lg:order-2">
+                <div class="flex items-center space-x-4 lg:order-2">
                     <DarkModeSwitcher />
 
-                    <button
-                        type="button"
-                        class="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                        @click="toggleDropdownMenu"
-                    >
-                        <span class="sr-only">Open user menu</span>
-                        <img
-                            class="w-8 h-8 rounded-full"
-                            :src="user.avatar"
-                            alt="user photo"
-                        />
-                    </button>
-                    <!-- Dropdown menu -->
-                    <div
-                        :class="{
-                            hidden: !toggleDropdown,
-                            'block absolute top-6 right-8 mt-4 w-56 z-50 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600':
-                                toggleDropdown,
-                        }"
-                    >
-                        <div class="px-4 py-3">
-                            <span
-                                class="block text-sm font-semibold text-gray-900 dark:text-white"
+                    <!-- notifications -->
+                    <div class="flex items-center justify-center">
+                        <NotificationBadge />
+                    </div>
+
+                    <!-- profile functionality -->
+                    <div>
+                        <button
+                            type="button"
+                            class="flex text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                            @click="toggleDropdownMenu"
+                        >
+                            <span class="sr-only">Open user menu</span>
+                            <img
+                                class="w-8 h-8 rounded-full"
+                                :src="user.avatar"
+                                alt="user photo"
+                            />
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div
+                            :class="{
+                                hidden: !toggleDropdown,
+                                'block absolute top-6 right-8 mt-4 w-56 z-50 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600':
+                                    toggleDropdown,
+                            }"
+                        >
+                            <div class="px-4 py-3">
+                                <span
+                                    class="block text-sm font-semibold text-gray-900 dark:text-white"
+                                >
+                                    {{ user.name }}
+                                </span>
+                                <span
+                                    class="block text-sm text-gray-900 truncate dark:text-white"
+                                >
+                                    {{ user.email }}
+                                </span>
+                            </div>
+                            <ul
+                                class="py-1 text-gray-700 dark:text-gray-300"
+                                aria-labelledby="dropdown"
                             >
-                                {{ user.name }}
-                            </span>
-                            <span
-                                class="block text-sm text-gray-900 truncate dark:text-white"
+                                <li>
+                                    <Link
+                                        :href="route('profile.edit')"
+                                        class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
+                                        >My profile</Link
+                                    >
+                                </li>
+                            </ul>
+                            <ul
+                                class="py-1 text-gray-700 dark:text-gray-300"
+                                aria-labelledby="dropdown"
                             >
-                                {{ user.email }}
-                            </span>
+                                <li>
+                                    <Link
+                                        :href="route('logout')"
+                                        method="post"
+                                        class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                    >
+                                        Logout
+                                    </Link>
+                                </li>
+                            </ul>
                         </div>
-                        <ul
-                            class="py-1 text-gray-700 dark:text-gray-300"
-                            aria-labelledby="dropdown"
-                        >
-                            <li>
-                                <Link
-                                    :href="route('profile.edit')"
-                                    class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white"
-                                    >My profile</Link
-                                >
-                            </li>
-                        </ul>
-                        <ul
-                            class="py-1 text-gray-700 dark:text-gray-300"
-                            aria-labelledby="dropdown"
-                        >
-                            <li>
-                                <Link
-                                    :href="route('logout')"
-                                    method="post"
-                                    class="block px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                >
-                                    Logout
-                                </Link>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>

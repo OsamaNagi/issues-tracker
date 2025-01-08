@@ -7,12 +7,6 @@ import Heading from "@/Components/Heading.vue";
 import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
-    canLogin: {
-        type: Boolean,
-    },
-    canRegister: {
-        type: Boolean,
-    },
     projects: {
         type: Object,
     },
