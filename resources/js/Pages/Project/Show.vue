@@ -9,12 +9,8 @@ import Heading from "@/Components/Heading.vue";
 import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
-    project: {
-        type: Object,
-    },
-    issues: {
-        type: Object,
-    },
+    project: Object,
+    issues: Object,
 });
 
 const issues = reactive(props.issues);

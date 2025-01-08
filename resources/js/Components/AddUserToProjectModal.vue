@@ -37,6 +37,7 @@ const submitForm = () => {
     form.post(route("project.add-users", { project: props.project.id }), {
         onSuccess: () => {
             closeModal();
+            location.reload();
         },
         onError: (errors) => {},
     });
