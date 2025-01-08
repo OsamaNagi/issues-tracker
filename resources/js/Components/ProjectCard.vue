@@ -14,6 +14,7 @@ const props = defineProps({
         type: Object,
         required: true,
     },
+    canEdit: Boolean,
 });
 
 const project = reactive(props.project);
@@ -65,6 +66,7 @@ const updatedAt = computed(() => {
                 {{ project.visibility }}
             </span>
             <Link
+                v-if="canEdit"
                 class="px-3 py-1 text-sm font-medium text-white bg-blue-700 rounded-md hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 :href="route('project.edit', project.id)"
             >

@@ -12,7 +12,7 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    public function index()
+    public function index(Project $project)
     {
         $user = Auth::user();
 
@@ -23,8 +23,14 @@ class ProjectController extends Controller
             })
             ->paginate(10);
 
+        $projects->getCollection()->transform(function ($project) use ($user) {
+            $project->canEdit = $user->can('edit', $project);
+            return $project;
+        });
+
         return Inertia::render('Projects', [
             'projects' => $projects,
+            'canEditProject' => auth()->user()->can('edit', $project),
         ]);
     }
 
@@ -58,7 +64,7 @@ class ProjectController extends Controller
 
         return Inertia::render('Project/Show', [
             'project' => $project->load('users', 'issues'),
-            'issues' => $issues
+            'issues' => $issues,
         ]);
     }
 
@@ -103,6 +109,8 @@ class ProjectController extends Controller
             'project' => $project,
             'projectUsers' => UserResource::collection($ProjectUsers),
             'users' => $users,
+            'canAddUsers' => auth()->user()->can('add', $project),
+            'canRemoveUsers' => auth()->user()->can('delete', $project),
         ]);
     }
 

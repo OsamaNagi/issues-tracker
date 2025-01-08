@@ -7,9 +7,8 @@ import Heading from "@/Components/Heading.vue";
 import Pagination from "@/Components/Pagination.vue";
 
 const props = defineProps({
-    projects: {
-        type: Object,
-    },
+    projects: Object,
+    canEditProject: Boolean,
 });
 
 const projects = reactive(props.projects);
@@ -72,7 +71,10 @@ const filteredProjects = computed(() => {
                 </div>
                 <!-- Project List -->
                 <div v-for="project in filteredProjects" :key="project.id">
-                    <ProjectCard :project="project" />
+                    <ProjectCard
+                        :canEdit="project.canEdit"
+                        :project="project"
+                    />
                 </div>
             </div>
 

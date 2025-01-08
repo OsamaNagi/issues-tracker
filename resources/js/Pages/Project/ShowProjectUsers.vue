@@ -6,15 +6,11 @@ import { reactive } from "vue";
 import EmptyState from "@/Components/EmptyState.vue";
 
 const props = defineProps({
-    project: {
-        type: Object,
-    },
-    projectUsers: {
-        type: Object,
-    },
-    users: {
-        type: Object,
-    },
+    project: Object,
+    projectUsers: Object,
+    users: Object,
+    canAddUsers: Boolean,
+    canRemoveUsers: Boolean,
 });
 
 const form = useForm({
@@ -30,6 +26,9 @@ const submitForm = (userId) => {
             user: userId,
         }),
         {
+            onSuccess: () => {
+                location.reload();
+            },
             onError: (errors) => {
                 console.error("Validation errors:", errors);
             },
@@ -44,7 +43,7 @@ const submitForm = (userId) => {
             <div class="flex items-center justify-between">
                 <p class="text-lg font-bold text-slate-50">Users in project</p>
 
-                <div>
+                <div v-if="canAddUsers">
                     <AddUserToProjectModal :users="users" :project="project" />
                 </div>
             </div>
@@ -61,7 +60,13 @@ const submitForm = (userId) => {
                         <tr>
                             <th scope="col" class="px-6 py-3">Name</th>
                             <th scope="col" class="px-6 py-3">Role</th>
-                            <th scope="col" class="px-6 py-3">Action</th>
+                            <th
+                                v-if="canRemoveUsers"
+                                scope="col"
+                                class="px-6 py-3"
+                            >
+                                Action
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,11 +96,11 @@ const submitForm = (userId) => {
                             <td
                                 class="px-6 py-4"
                                 v-for="role in user.roles"
-                                key="role.id"
+                                :key="role.id"
                             >
                                 {{ role.name }}
                             </td>
-                            <td class="px-6 py-4">
+                            <td v-if="canRemoveUsers" class="px-6 py-4">
                                 <form
                                     @submit.prevent="() => submitForm(user.id)"
                                 >
