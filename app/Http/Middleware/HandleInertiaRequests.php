@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
+use App\Http\Resources\NotificationResource;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -49,7 +50,7 @@ class HandleInertiaRequests extends Middleware
             'notifications' => function () {
                 // Retrieve unread notifications for the authenticated user
                 $user = auth()->user();
-                return $user ? $user->notifications : [];
+                return $user ? NotificationResource::collection($user->notifications) : [];
             },
         ];
     }

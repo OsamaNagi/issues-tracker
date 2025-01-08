@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserRoleEnum;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,32 +16,32 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $admin = User::create([
-            'name' => 'Admin User',
+            'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('password'),
         ]);
 
         $manager = User::create([
-            'name' => 'Manager User',
+            'name' => 'Manager',
             'email' => 'manager@gmail.com',
             'password' => bcrypt('password'),
         ]);
 
         $developer = User::create([
-            'name' => 'Developer User',
+            'name' => 'Developer',
             'email' => 'developer@gmail.com',
             'password' => bcrypt('password'),
         ]);
 
-        $client = User::create([
-            'name' => 'Client User',
-            'email' => 'client@gmail.com',
+        $viewer = User::create([
+            'name' => 'Viewer',
+            'email' => 'Viewer@gmail.com',
             'password' => bcrypt('password'),
         ]);
 
-        $admin->roles()->attach(Role::where('name', 'admin')->first());
-        $manager->roles()->attach(Role::where('name', 'manager')->first());
-        $developer->roles()->attach(Role::where('name', 'developer')->first());
-        $client->roles()->attach(Role::where('name', 'client')->first());
+        $admin->roles()->attach(Role::where('name', UserRoleEnum::ADMIN)->first());
+        $manager->roles()->attach(Role::where('name', UserRoleEnum::MANAGER)->first());
+        $developer->roles()->attach(Role::where('name', UserRoleEnum::DEVELOPER)->first());
+        $viewer->roles()->attach(Role::where('name', UserRoleEnum::VIEWER)->first());
     }
 }
