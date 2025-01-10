@@ -40,9 +40,6 @@ class HandleInertiaRequests extends Middleware
                 'user' => UserResource::make($request->user())->resolve($request),
                 'check' => fn() => Auth::check(),
                 'isAdmin' => fn() => Auth::check() && Auth::user()->isAdmin(),
-                // check if user is admin or creator of the project or creator of the issue
-                'owner' => fn() => Auth::check() && Auth::user()->isAdmin() || Auth::user()->id === $request->route('project')->user_id || Auth::user()->id === $request->route('issue')->created_by,
-
             ],
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),

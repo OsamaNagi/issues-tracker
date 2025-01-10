@@ -235,7 +235,7 @@ const updatedAt = computed(() => {
 
                     <!-- danger zone -->
                     <div
-                        v-if="$page.props.auth.owner"
+                        v-if="issue.canEdit"
                         class="p-4 bg-white rounded-lg dark:bg-gray-800"
                     >
                         <h2
