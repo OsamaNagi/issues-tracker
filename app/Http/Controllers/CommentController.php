@@ -16,9 +16,15 @@ class CommentController extends Controller
         ]);
 
         $issue->comments()->create([
-            'content' => $request->input('content'),
-            'user_id' => auth()->id()
+            'user_id' => auth()->id(),
+            'content' => $request->input('content')
         ]);
+
+        activity()
+            ->performedOn($issue)
+            ->causedBy(auth()->user())
+            ->withProperties(['content' => $request->input('content')])
+            ->log('commented on issue');
 
         return redirect()->route('issue.show', [$issue->project, $issue]);
     }

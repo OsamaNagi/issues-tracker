@@ -112,7 +112,6 @@ const toggleDropdownMenu = (index) => {
                 </button>
             </div>
         </article>
-        {{ console.log(comments) }}
 
         <Pagination :links="comments.meta.links" />
     </div>

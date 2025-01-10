@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Inertia\Inertia;
+use Spatie\Activitylog\Models\Activity;
 
 class IssueController extends Controller
 {
@@ -67,11 +68,19 @@ class IssueController extends Controller
 
         $issue->canEdit = auth()->user()->can('edit', $issue);
 
+        // Get the activity log for the issue with the user who performed the activity info like name and avatar
+        $activityLog = Activity::query()
+            ->where('subject_id', $issue->id)
+            ->where('subject_type', Issue::class)
+            ->with('causer', 'subject')
+            ->get();
+
         return Inertia::render('Issue/Show', [
             'project' => $project,
             'issue' => $issue,
             'comments' => CommentResource::collection($issue->comments()->with(['user'])->paginate(5)),
             'assignees' => UserResource::collection($issue->assignees),
+            'activityLog' => $activityLog,
         ]);
     }
 
@@ -117,5 +126,19 @@ class IssueController extends Controller
         $issue->delete();
 
         return redirect()->route('project.show', $project);
+    }
+
+    public function close(Project $project, Issue $issue)
+    {
+        $issue->update(['status' => 'closed']);
+
+        return redirect()->route('issue.show', [$project, $issue]);
+    }
+
+    public function reopen(Project $project, Issue $issue)
+    {
+        $issue->update(['status' => 'open']);
+
+        return redirect()->route('issue.show', [$project, $issue]);
     }
 }
