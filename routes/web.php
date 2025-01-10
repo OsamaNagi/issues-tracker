@@ -68,6 +68,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::patch('/projects/{project}/issues/{issue}', [IssueController::class, 'update'])->name('issue.update');
 
+    Route::patch('/projects/{project}/issues/{issue}/close', [IssueController::class, 'close'])
+        ->name('issue.close')
+        ->can('edit', 'issue');
+
+    Route::patch('/projects/{project}/issues/{issue}/reopen', [IssueController::class, 'reopen'])
+        ->name('issue.reopen')
+        ->can('edit', 'issue');
+
     Route::post('/projects/{project}/issues/{issue}/comments', [CommentController::class, 'store'])->name('comment.store');
     Route::delete('/projects/{project}/issues/{issue}/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
 });
