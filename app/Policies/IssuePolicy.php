@@ -15,4 +15,10 @@ class IssuePolicy
         // check if the user is admin or the creator of the issue he can edit the issue
         return $user->hasRole('admin') || $issue->created_by === $user->id;
     }
+
+    public function delete(User $user, Issue $issue): bool
+    {
+        // check if the user is admin or the creator of the issue he can delete the issue
+        return $user->hasRole('admin') || $issue->created_by === $user->id;
+    }
 }

@@ -1,10 +1,13 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useForm, Link } from "@inertiajs/vue3";
 
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import LabelInputField from "@/Components/LabelInputField.vue";
+import { formatDistanceToNow } from "date-fns";
+import Title from "@/Components/Title.vue";
+import DeleteProjectModal from "@/Components/DeleteProjectModal.vue";
 
 const props = defineProps({
     project: {
@@ -12,6 +15,17 @@ const props = defineProps({
         required: true,
     },
 });
+
+const showDeleteModal = ref(false);
+
+const openDeleteModal = () => {
+    showDeleteModal.value = true;
+};
+
+// Function to handle the modal close
+const closeDeleteModal = () => {
+    showDeleteModal.value = false;
+};
 
 // Initialize the form
 const form = useForm({
@@ -28,15 +42,50 @@ const submitForm = () => {
         },
     });
 };
+
+const projectStatusForm = useForm({});
+
+const toggleProjectStatus = () => {
+    const action = props.project.status === "open" ? "close" : "reopen";
+
+    projectStatusForm.patch(
+        route(`project.${action}`, { project: props.project.id }),
+        {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Update project status locally
+                props.project.status = action === "close" ? "closed" : "open";
+            },
+            onError: (errors) => {
+                console.error(`Error ${action}ing project:`, errors);
+            },
+        }
+    );
+};
+
+const deleteProject = useForm({});
+
+const confirmDeleteProject = () => {
+    deleteProject.delete(
+        route("project.destroy", { project: props.project.id }),
+        {
+            onError: (errors) => {
+                console.error("Error deleting project:", errors);
+            },
+        }
+    );
+};
 </script>
 
 <template>
     <AuthenticatedLayout>
-        <div class="h-screen p-4 md:p-5">
+        <div class="min-h-screen p-4 md:p-5">
             <div class="flex items-center justify-between">
-                <p class="text-lg font-bold text-slate-50">
+                <h1
+                    class="mb-4 text-2xl font-extrabold leading-none tracking-tight text-gray-900 md:text-3xl dark:text-white"
+                >
                     Edit ({{ project.name }}) Project
-                </p>
+                </h1>
             </div>
 
             <form class="mt-6" @submit.prevent="submitForm">
@@ -134,7 +183,100 @@ const submitForm = () => {
                         Cancel
                     </Link>
                 </div>
+                <div class="mt-6">
+                    <p class="text-sm text-gray-500">
+                        This project was last updated on
+                        {{
+                            formatDistanceToNow(new Date(project.updated_at), {
+                                addSuffix: true,
+                            })
+                        }}
+                    </p>
+                </div>
             </form>
+
+            <Title class="mt-10"> Danger Zone </Title>
+            <div
+                class="relative mt-6 overflow-x-auto border border-red-600 rounded-lg shadow-md"
+            >
+                <table
+                    class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400"
+                >
+                    <tbody class="">
+                        <tr class="border-b dark:border-gray-700">
+                            <th
+                                scope="row"
+                                class="px-4 py-4 font-bold text-gray-900 text-md dark:text-white"
+                            >
+                                <p>
+                                    {{
+                                        project.status === "open"
+                                            ? "Close project"
+                                            : "Re-open project"
+                                    }}
+                                </p>
+                                <p class="mt-2">
+                                    {{
+                                        project.status === "open"
+                                            ? "Closing a project will disable its workflows & remove it from the list of open projects."
+                                            : "Re-opening a project will add it to the list of open projects."
+                                    }}
+                                </p>
+                            </th>
+
+                            <td class="py-8 pr-4 text-right">
+                                <button
+                                    type="button"
+                                    @click="toggleProjectStatus"
+                                    :disabled="projectStatusForm.processing"
+                                    class="text-red-500 bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-bold rounded-lg whitespace-nowrap text-xs md:text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                                >
+                                    <span v-if="projectStatusForm.processing"
+                                        >Processing...</span
+                                    >
+                                    <span v-else>
+                                        {{
+                                            project.status === "open"
+                                                ? "Close this project"
+                                                : "Reopen this project"
+                                        }}
+                                    </span>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b dark:border-gray-700">
+                            <th
+                                scope="row"
+                                class="px-4 py-4 font-bold text-gray-900 text-md dark:text-white"
+                            >
+                                <p>Delete project</p>
+                                <p class="mt-2">
+                                    Once you delete a project, there is no going
+                                    back. Please be certain.
+                                </p>
+                            </th>
+
+                            <td class="py-8 pr-4 text-right">
+                                <button
+                                    type="button"
+                                    @click="openDeleteModal"
+                                    class="text-red-500 bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-bold rounded-lg whitespace-nowrap text-xs md:text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+                                >
+                                    Delete this project
+                                </button>
+
+                                <DeleteProjectModal
+                                    :show="showDeleteModal"
+                                    @close="closeDeleteModal"
+                                    :project-name="project.name"
+                                    :confirmation-message="`@${props.project.creator.name}'s ${props.project.name}`"
+                                    @confirm="confirmDeleteProject"
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </AuthenticatedLayout>
 </template>

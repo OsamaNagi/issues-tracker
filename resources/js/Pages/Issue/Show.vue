@@ -1,11 +1,12 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import CommentSection from "@/Components/CommentSection.vue";
-import { computed, reactive } from "vue";
+import { computed, reactive, ref } from "vue";
 import { formatDistanceToNow } from "date-fns";
 import DimedLabel from "@/Components/DimedLabel.vue";
 import { Link, useForm } from "@inertiajs/vue3";
 import Heading from "@/Components/Heading.vue";
+import DeleteIssueModal from "@/Components/DeleteIssueModal.vue";
 // import ActivityLog from "@/Components/ActivityLog.vue";
 
 const props = defineProps({
@@ -14,6 +15,17 @@ const props = defineProps({
     comments: Object,
     assignees: Object,
 });
+
+const showDeleteModal = ref(false);
+
+const openDeleteModal = () => {
+    showDeleteModal.value = true;
+};
+
+// Function to handle the modal close
+const closeDeleteModal = () => {
+    showDeleteModal.value = false;
+};
 
 const assignees = reactive(props.assignees.data);
 
@@ -218,6 +230,25 @@ const updatedAt = computed(() => {
                             >
                                 {{ label.name }}
                             </DimedLabel>
+                        </div>
+                    </div>
+
+                    <!-- danger zone -->
+                    <div
+                        v-if="$page.props.auth.owner"
+                        class="p-4 bg-white rounded-lg dark:bg-gray-800"
+                    >
+                        <h2
+                            class="text-lg font-bold text-gray-900 dark:text-gray-50"
+                        >
+                            Danger Zone
+                        </h2>
+
+                        <div class="flex mt-2">
+                            <DeleteIssueModal
+                                :project="project"
+                                :issue="issue"
+                            />
                         </div>
                     </div>
                 </div>

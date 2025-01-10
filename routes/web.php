@@ -23,12 +23,29 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/project/create', [ProjectController::class, 'create'])->name('project.create');
     Route::post('/project/create', [ProjectController::class, 'store'])->name('project.store');
+
     Route::get('/project/{project}', [ProjectController::class, 'show'])->name('project.show');
     Route::get('/project/{project}/edit', [ProjectController::class, 'edit'])
         ->name('project.edit')
         ->can('edit', 'project');
 
-    Route::patch('/project/{project}', [ProjectController::class, 'update'])->name('project.update');
+    Route::patch('/project/{project}', [ProjectController::class, 'update'])
+        ->name('project.update')
+        ->can('edit', 'project');
+
+
+    Route::patch('/project/{project}/close', [ProjectController::class, 'close'])
+        ->name('project.close')
+        ->can('edit', 'project');
+
+    Route::patch('/project/{project}/reopen', [ProjectController::class, 'reopen'])
+        ->name('project.reopen')
+        ->can('edit', 'project');
+
+    Route::delete('/project/{project}', [ProjectController::class, 'destroy'])
+        ->name('project.destroy')
+        ->can('delete', 'project');
+
     Route::get('/project/{project}/add-users', [ProjectController::class, 'showAddUsers'])->name('project.ShowProjectUsers');
     Route::post('/project/{project}/add-users', [ProjectController::class, 'addUsers'])
         ->name('project.add-users')
@@ -41,6 +58,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/project/{project}/issue', [IssueController::class, 'create'])->name('issue.create');
     Route::post('/project/{project}/issue', [IssueController::class, 'store'])->name('issue.store');
     Route::get('/projects/{project}/issues/{issue}', [IssueController::class, 'show'])->name('issue.show');
+    Route::delete('/projects/{project}/issues/{issue}', [IssueController::class, 'destroy'])
+        ->name('issue.destroy')
+        ->can('delete', 'issue');
+
     Route::get('/projects/{project}/issues/{issue}/edit', [IssueController::class, 'edit'])
         ->name('issue.edit')
         ->can('edit', 'issue');

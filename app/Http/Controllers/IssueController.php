@@ -111,4 +111,11 @@ class IssueController extends Controller
 
         return redirect()->route('issue.show', [$project, $issue]);
     }
+
+    public function destroy(Project $project, Issue $issue)
+    {
+        $issue->delete();
+
+        return redirect()->route('project.show', $project);
+    }
 }
