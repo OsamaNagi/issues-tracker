@@ -69,6 +69,8 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
+        $project->load('creator');
+
         return Inertia::render('Project/Edit', [
             'project' => $project,
         ]);
@@ -131,5 +133,30 @@ class ProjectController extends Controller
         $project->users()->detach($user);
 
         return redirect()->route('project.add-users', $project);
+    }
+
+    public function close(Project $project)
+    {
+        $project->update([
+            'status' => 'closed',
+        ]);
+
+        return redirect()->route('project.edit', $project);
+    }
+
+    public function reopen(Project $project)
+    {
+        $project->update([
+            'status' => 'open',
+        ]);
+
+        return redirect()->route('project.edit', $project);
+    }
+
+    public function destroy(Project $project)
+    {
+        $project->delete();
+
+        return redirect()->route('projects.index');
     }
 }
