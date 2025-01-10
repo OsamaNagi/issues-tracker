@@ -11,7 +11,6 @@ class ProjectPolicy
     public function edit(User $user, Project $project): bool
     {
         // check if the user is admin or project manager he can edit the project
-        // dd($project->user_id, $user->id);
         return $user->hasRole('admin') || $project->user_id === $user->id;
     }
 
@@ -24,7 +23,6 @@ class ProjectPolicy
     public function add(User $user, Project $project): bool
     {
         // check if the user is admin or project manager he can add user to the project
-        // dd($project->user_id, $user->id);
         return $user->hasRole('admin') || $project->user_id === $user->id;
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 use App\Http\Resources\NotificationResource;
+use Illuminate\Support\Facades\Auth;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -37,6 +38,7 @@ class HandleInertiaRequests extends Middleware
             'appName' => config('app.name'),
             'auth' => [
                 'user' => UserResource::make($request->user())->resolve($request),
+                'isAdmin' => fn() => $request->user()->isAdmin(),
             ],
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),

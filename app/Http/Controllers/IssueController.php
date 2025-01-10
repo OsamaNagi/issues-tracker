@@ -65,6 +65,8 @@ class IssueController extends Controller
     {
         $issue = $issue->load(['labels', 'project', 'creator', 'assignees']);
 
+        $issue->canEdit = auth()->user()->can('edit', $issue);
+
         return Inertia::render('Issue/Show', [
             'project' => $project,
             'issue' => $issue,
