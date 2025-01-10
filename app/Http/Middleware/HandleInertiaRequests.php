@@ -38,7 +38,8 @@ class HandleInertiaRequests extends Middleware
             'appName' => config('app.name'),
             'auth' => [
                 'user' => UserResource::make($request->user())->resolve($request),
-                'isAdmin' => fn() => $request->user()->isAdmin(),
+                'check' => fn() => Auth::check(),
+                'isAdmin' => fn() => Auth::check() && Auth::user()->isAdmin(),
             ],
             'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
