@@ -7,6 +7,7 @@ import IssueCard from "@/Components/IssueCard.vue";
 import { Link } from "@inertiajs/vue3";
 import Heading from "@/Components/Heading.vue";
 import Pagination from "@/Components/Pagination.vue";
+import EmptyState from "@/Components/EmptyState.vue";
 
 const props = defineProps({
     project: Object,
@@ -87,7 +88,11 @@ const filteredIssues = computed(() => {
                 </div>
             </div>
 
-            <div class="mt-6">
+            <EmptyState class="mt-10" v-if="filteredIssues.length === 0">
+                No issues found
+            </EmptyState>
+
+            <div class="mt-6" v-if="issues.links.length >= 10">
                 <Pagination :links="issues.links" />
             </div>
         </div>

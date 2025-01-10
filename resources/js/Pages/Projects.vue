@@ -5,6 +5,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ProjectCard from "@/Components/ProjectCard.vue";
 import Heading from "@/Components/Heading.vue";
 import Pagination from "@/Components/Pagination.vue";
+import EmptyState from "@/Components/EmptyState.vue";
 
 const props = defineProps({
     projects: Object,
@@ -78,8 +79,12 @@ const filteredProjects = computed(() => {
                 </div>
             </div>
 
+            <EmptyState class="mt-10" v-if="filteredProjects.length === 0">
+                No projects found
+            </EmptyState>
+
             <!-- Pagination -->
-            <div class="mt-6">
+            <div class="mt-6" v-if="projects.links.length >= 10">
                 <Pagination :links="projects.links" />
             </div>
         </div>
