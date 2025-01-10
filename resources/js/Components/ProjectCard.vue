@@ -28,7 +28,7 @@ const updatedAt = computed(() => {
 
 <template>
     <div
-        class="flex items-center justify-between p-4 transition-colors duration-100 bg-white dark:bg-gray-800 hover:bg-gray-700"
+        class="flex items-center justify-between p-4 transition-colors duration-100 bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
     >
         <Link :href="route('project.show', project.id)">
             <!-- Left Content -->
@@ -42,7 +42,7 @@ const updatedAt = computed(() => {
                     ]"
                 />
                 <div
-                    class="text-gray-900 dark:text-gray-400 hover:text-blue-400"
+                    class="text-gray-900 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-500"
                 >
                     <h3 class="font-semibold capitalize">
                         @{{ project.creator.name }}'s
@@ -50,7 +50,7 @@ const updatedAt = computed(() => {
                             ({{ project.name }})
                         </span>
                     </h3>
-                    <p class="text-sm dark:text-gray-400">
+                    <p class="text-sm">
                         {{ project.creator.name }} #{{ project.id }} updated
                         {{ updatedAt }}
                     </p>

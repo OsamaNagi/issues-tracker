@@ -30,7 +30,6 @@ class ProjectController extends Controller
 
         return Inertia::render('Projects', [
             'projects' => $projects,
-            'canEditProject' => auth()->user()->can('edit', $project),
         ]);
     }
 

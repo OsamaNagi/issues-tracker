@@ -31,7 +31,9 @@ const props = defineProps({
                 heading="Manage Role Assignment"
             />
 
-            <div class="relative mt-10 overflow-x-auto rounded-lg">
+            <div
+                class="relative mt-10 overflow-x-auto border border-gray-200 rounded-lg dark:border-gray-600"
+            >
                 <table
                     class="w-full text-sm text-left text-gray-500 rtl:text-right dark:text-gray-400"
                 >
