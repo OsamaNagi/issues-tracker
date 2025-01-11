@@ -75,6 +75,8 @@ class IssueController extends Controller
             ->with('causer', 'subject')
             ->get();
 
+        // dd($activityLog);
+
         return Inertia::render('Issue/Show', [
             'project' => $project,
             'issue' => $issue,
@@ -101,21 +103,43 @@ class IssueController extends Controller
     {
         $validatedData = $request->validated();
 
-        // Update the issue while excluding label_id and assignee_ids
+        $original = $issue->getOriginal();
+
         $issue->update(Arr::except($validatedData, ['label_ids', 'assignee_ids']));
 
-        // Sync labels if provided
         if ($request->label_ids) {
             $issue->labels()->sync($request->label_ids);
         } else {
             $issue->labels()->detach();
         }
 
-        // Sync assignees if provided
         if ($request->assignee_ids) {
             $issue->assignees()->sync($request->assignee_ids);
         } else {
             $issue->assignees()->detach();
+        }
+
+        $changes = $issue->getChanges();
+
+        foreach ($changes as $field => $newValue) {
+            if (in_array($field, ['updated_at', 'created_at'])) {
+                continue;
+            }
+
+            $originalValue = $original[$field] ?? null;
+
+            if ($originalValue != $newValue) {
+                activity()
+                    ->useLog('issue_activity')
+                    ->performedOn($issue)
+                    ->causedBy(auth()->user())
+                    ->withProperties([
+                        'field' => $field,
+                        'old_value' => $originalValue,
+                        'new_value' => $newValue,
+                    ])
+                    ->log("updated the {$field} to '{$newValue}'");
+            }
         }
 
         return redirect()->route('issue.show', [$project, $issue]);
@@ -132,12 +156,24 @@ class IssueController extends Controller
     {
         $issue->update(['status' => 'closed']);
 
+        activity()
+            ->useLog('close_issue')
+            ->performedOn($issue)
+            ->causedBy(auth()->user())
+            ->log('closed this issue');
+
         return redirect()->route('issue.show', [$project, $issue]);
     }
 
     public function reopen(Project $project, Issue $issue)
     {
         $issue->update(['status' => 'open']);
+
+        activity()
+            ->useLog('reopen_issue')
+            ->performedOn($issue)
+            ->causedBy(auth()->user())
+            ->log('reopened this issue');
 
         return redirect()->route('issue.show', [$project, $issue]);
     }

@@ -7,7 +7,7 @@ import DimedLabel from "@/Components/DimedLabel.vue";
 import { Link, useForm } from "@inertiajs/vue3";
 import Heading from "@/Components/Heading.vue";
 import DeleteIssueModal from "@/Components/DeleteIssueModal.vue";
-import ActivityLog from "@/Components/ActivityLog.vue";
+import ActivityLog from "@/Components/ActivityLog/ActivityLog.vue";
 
 const props = defineProps({
     project: Object,

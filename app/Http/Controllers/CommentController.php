@@ -21,6 +21,7 @@ class CommentController extends Controller
         ]);
 
         activity()
+            ->useLog('comment')
             ->performedOn($issue)
             ->causedBy(auth()->user())
             ->withProperties(['content' => $request->input('content')])
