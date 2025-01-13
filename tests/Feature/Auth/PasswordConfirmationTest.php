@@ -17,7 +17,7 @@ test('password can be confirmed', function () {
         'password' => 'password',
     ]);
 
-    $response->assertRedirect(route('lo', absolute: false));
+    $response->assertRedirect(route('home', absolute: false));
     $response->assertSessionHasNoErrors();
 });
 

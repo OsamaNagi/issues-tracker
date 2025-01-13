@@ -16,6 +16,7 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return array_merge(parent::toArray($request), [
+            // refactor to send only needed fields
             'avatar' => Storage::url($this->avatar ?? 'avatars/default.png'),
         ]);
     }

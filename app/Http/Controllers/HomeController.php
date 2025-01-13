@@ -6,6 +6,7 @@ use App\Models\Labels;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -20,8 +21,8 @@ class HomeController extends Controller
         // Get the count of users with each role
         $roleCounts = User::with('roles')
             ->get()
-            ->groupBy(fn($user) => $user->roles->first()->name ?? 'No Role')
-            ->map(fn($group) => $group->count())
+            ->groupBy(fn(User $user) => $user->roles->first()->name ?? 'No Role')
+            ->map(fn(Collection $group) => $group->count())
             ->toArray();
 
         $userRoles = array_keys($roleCounts);
@@ -33,7 +34,7 @@ class HomeController extends Controller
         // get all user issues with their priority
         $userIssuesPriority = $user->issues
             ->groupBy('priority')
-            ->map(fn($group) => [
+            ->map(fn(Collection $group) => [
                 'name' => $group->first()->priority,
                 'count' => $group->count(),
             ])

@@ -13,11 +13,13 @@ use Inertia\Inertia;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
+
     Route::get('/user-role-management', [UserRoleManagementController::class, 'index'])
         ->name('user-role-management')
         ->can('isAdmin', 'App\Models\User');
 
-    Route::patch('/user-role-management/{user}', [UserRoleManagementController::class, 'update'])->name('user-role-management.update');
+    Route::patch('/user-role-management/{user}', [UserRoleManagementController::class, 'update'])
+        ->name('user-role-management.update');
 
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
 
