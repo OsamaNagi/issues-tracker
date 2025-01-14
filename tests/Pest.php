@@ -11,6 +11,7 @@
 |
 */
 
+use App\Models\Project;
 use App\Models\User;
 
 pest()->extend(Tests\TestCase::class)
@@ -46,4 +47,9 @@ expect()->extend('toBeOne', function () {
 function login($user = null)
 {
     return test()->actingAs($user ?? User::factory()->create());
+}
+
+function project($overrides = [])
+{
+    return Project::factory()->create($overrides);
 }
