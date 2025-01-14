@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,8 +23,8 @@ class IssueFactory extends Factory
             'description' => $this->faker->paragraph,
             'status' => $this->faker->randomElement(['open', 'closed']),
             'priority' => $this->faker->randomElement(['low', 'medium', 'high']),
-            'project_id' => \App\Models\Project::find(1),
-            'created_by' => \App\Models\User::find(1),
+            'project_id' => Project::find(1),
+            'created_by' => User::find(1),
         ];
     }
 }
