@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\Models\Project;
 use App\Models\User;
+use App\Notifications\AddedUserToProjectNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -124,6 +125,13 @@ class ProjectController extends Controller
 
         // Attach users to the project
         $project->users()->syncWithoutDetaching($validated['user_ids']);
+
+        $project->users()
+            ->wherePivot('user_id', '!=', auth()->id())
+            ->get()
+            ->each(function ($user) use ($project) {
+                $user->notify(new AddedUserToProjectNotification($project, $user));
+            });
 
         return redirect()->route('project.add-users', $project);
     }

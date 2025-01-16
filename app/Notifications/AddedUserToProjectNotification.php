@@ -7,15 +7,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewIssueOpenedNotification extends Notification
+class AddedUserToProjectNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected $issue)
+    public function __construct(protected $project, protected $user)
     {
+        //
     }
 
     /**
@@ -33,12 +34,10 @@ class NewIssueOpenedNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        logger('toArray method called');
-
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    ->line('Thank you for using our application!');
     }
 
     /**
@@ -49,13 +48,12 @@ class NewIssueOpenedNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'notification_type' => 'new_issue_opened',
-            'issue_id' => $this->issue->id,
-            'project_id' => $this->issue->project_id,
-            'user_avatar' => $this->issue->creator->avatar,
-            'title' => $this->issue->title,
-            'project_name' => $this->issue->project->name,
-            'created_by' => $this->issue->creator->name,
+            'notification_type' => 'added_user_to_project',
+            'project_id' => $this->project->id,
+            'project_name' => $this->project->name,
+            'user_id' => $this->user->id,
+            'user_name' => $this->user->name,
+            'created_by' => auth()->user()->name,
         ];
     }
 }

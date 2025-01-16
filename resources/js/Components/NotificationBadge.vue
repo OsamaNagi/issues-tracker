@@ -1,12 +1,14 @@
 <script setup>
 import EmptyState from "@/Components/EmptyState.vue";
-import { usePage } from "@inertiajs/vue3";
-import { computed } from "vue";
+import {usePage} from "@inertiajs/vue3";
+import {computed} from "vue";
 
 const page = usePage();
 
 const notificationsCount = computed(() => page.props.notificationsCount);
 const notifications = computed(() => page.props.notifications?.data);
+
+console.log(notifications.value);
 
 const toggleNotification = () => {
     const dropdownNotification = document.getElementById(
@@ -14,6 +16,28 @@ const toggleNotification = () => {
     );
     dropdownNotification.classList.toggle("hidden");
 };
+
+const getNotificationType = (notification) => {
+    const type = notification.data.notification_type;
+
+    switch (type) {
+        case "added_user_to_project":
+            return ` added you to
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.project_name}
+                            </span> project.`;
+
+        case "new_issue_opened":
+            return ` opened a new issue in
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.project_name}
+                            </span> ${notification.data.title}.`;
+
+        default:
+            return "performed an action.";
+    }
+}
+
 </script>
 
 <template>
@@ -100,11 +124,14 @@ const toggleNotification = () => {
                             >
                                 @{{ notification.data.created_by }}
                             </span>
-                            opened a new issue in
-                            <span class="font-medium text-blue-500" href="#">
-                                {{ notification.data.project_name }}
-                            </span>
-                            {{ notification.data.title }}
+                            <!--                            opened a new issue in-->
+                            <!--                            <span class="font-medium text-blue-500" href="#">-->
+                            <!--                                {{ notification.data.project_name }}-->
+                            <!--                            </span>-->
+                            <!--                            {{ notification.data.title }}-->
+
+                            <span v-html="getNotificationType(notification)"></span>
+
                         </div>
                         <div class="text-xs text-blue-600 dark:text-blue-500">
                             {{ notification.created_at_human }}
