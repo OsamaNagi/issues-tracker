@@ -61,6 +61,35 @@ const getNotificationType = (notification) => {
                                 ${notification.data.issue_title}
                             </span>.`;
 
+        case "remove_user_from_project":
+            return ` removed you from the
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.project_name}
+                            </span> project.`;
+
+        case "update_user_role":
+            return ` updated your role to
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.role_name}
+                            </span>`;
+
+        case "close_issue":
+            return ` closed the issue
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.issue_title}
+                            </span>.`;
+
+        case "reopen_issue":
+            return ` reopened the issue
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.issue_title}
+                            </span>.`;
+
+            case "add_comment":
+            return ` commented on the issue
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.issue_title}
+                            </span> ${notification.data.comment}.`;
         default:
             return "performed an action.";
     }
@@ -114,7 +143,7 @@ const getNotificationType = (notification) => {
                     </div>
                 </EmptyState>
             </div>
-            <div v-else>
+            <div v-else class="max-h-96 overflow-y-auto">
                 <a
                     v-for="notification in notifications"
                     :key="notification.id"
@@ -128,10 +157,10 @@ const getNotificationType = (notification) => {
                             alt="Leslie image"
                         />
                         <div
-                            class="absolute flex items-center justify-center w-5 h-5 -mt-5 bg-green-400 border border-white rounded-full ms-6 dark:border-gray-800"
+                            class="flex  items-center justify-center w-5 h-5 -mt-5 bg-green-400 border border-white rounded-full ms-6 dark:border-gray-800"
                         >
                             <svg
-                                class="w-2 h-2 text-white"
+                                class="w-2 h-2 text-white "
                                 aria-hidden="true"
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="currentColor"

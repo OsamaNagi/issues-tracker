@@ -9,7 +9,9 @@ use App\Models\Issue;
 use App\Models\Labels;
 use App\Models\Project;
 use App\Notifications\AssignUserToIssueNotification;
+use App\Notifications\CloseIssueNotification;
 use App\Notifications\NewIssueOpenedNotification;
+use App\Notifications\ReopenIssueNotification;
 use App\Notifications\UnassignUserFromIssueNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -134,14 +136,20 @@ class IssueController extends Controller
                     $user->notify(new AssignUserToIssueNotification($issue));
                 });
         } else {
-            $issue->assignees()->detach();
+
+            $currentAssignees = $issue->assignees()->pluck('users.id')->toArray();
+
+            $updatedAssignees = $validatedData['assignee_ids'] ?? [];
+
+            $unassignedUsers = $issue->assignees()
+                ->whereIn('users.id', array_diff($currentAssignees, $updatedAssignees))
+                ->get();
+
+            $issue->assignees()->sync($updatedAssignees);
 
             // notify the users who were assigned to the issue that they have been unassigned
-            $issue->assignees()
-                ->where('users.id', '!=', auth()->id())
-                ->get()
-                ->each(function ($user) use ($issue) {
-                    $user->notify(new UnassignUserFromIssueNotification($issue));
+            $unassignedUsers->each(function ($user) use ($issue) {
+                    $user->notify(new UnassignUserFromIssueNotification($issue, $user));
                 });
         }
 
@@ -188,6 +196,13 @@ class IssueController extends Controller
             ->causedBy(auth()->user())
             ->log('closed this issue');
 
+        $issue->assignees()
+            ->where('users.id', '!=', auth()->id())
+            ->get()
+            ->each(function ($user) use ($issue) {
+                $user->notify(new CloseIssueNotification($issue));
+            });
+
         return redirect()->route('issue.show', [$project, $issue]);
     }
 
@@ -200,6 +215,13 @@ class IssueController extends Controller
             ->performedOn($issue)
             ->causedBy(auth()->user())
             ->log('reopened this issue');
+
+        $issue->assignees()
+            ->where('users.id', '!=', auth()->id())
+            ->get()
+            ->each(function ($user) use ($issue) {
+                $user->notify(new ReopenIssueNotification($issue));
+            });
 
         return redirect()->route('issue.show', [$project, $issue]);
     }

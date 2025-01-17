@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\UpdateUserRoleNotification;
 use Gate;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -29,6 +30,8 @@ class UserRoleManagementController extends Controller
         ]);
 
         $user->roles()->sync([$validated['role']]);
+
+        $user->notify(new UpdateUserRoleNotification($user));
 
         return redirect()->route('user-role-management');
     }
