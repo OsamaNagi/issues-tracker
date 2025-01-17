@@ -8,7 +8,9 @@ use App\Http\Resources\UserResource;
 use App\Models\Issue;
 use App\Models\Labels;
 use App\Models\Project;
+use App\Notifications\AssignUserToIssueNotification;
 use App\Notifications\NewIssueOpenedNotification;
+use App\Notifications\UnassignUserFromIssueNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
@@ -49,6 +51,14 @@ class IssueController extends Controller
         // Attach assignees if provided
         if ($request->assignee_ids) {
             $issue->assignees()->attach($request->assignee_ids);
+
+            // notify the assigned user about the issue assigned to them
+            $issue->assignees()
+                ->where('users.id', '!=', auth()->id())
+                ->get()
+                ->each(function ($user) use ($issue) {
+                    $user->notify(new AssignUserToIssueNotification($issue));
+                });
         }
 
         // notify the project users about the new issue created in the project by the user who created it
@@ -115,8 +125,24 @@ class IssueController extends Controller
 
         if ($request->assignee_ids) {
             $issue->assignees()->sync($request->assignee_ids);
+
+            // notify the assigned user about the issue assigned to them
+            $issue->assignees()
+                ->where('users.id', '!=', auth()->id())
+                ->get()
+                ->each(function ($user) use ($issue) {
+                    $user->notify(new AssignUserToIssueNotification($issue));
+                });
         } else {
             $issue->assignees()->detach();
+
+            // notify the users who were assigned to the issue that they have been unassigned
+            $issue->assignees()
+                ->where('users.id', '!=', auth()->id())
+                ->get()
+                ->each(function ($user) use ($issue) {
+                    $user->notify(new UnassignUserFromIssueNotification($issue));
+                });
         }
 
         $changes = $issue->getChanges();

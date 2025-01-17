@@ -6,6 +6,9 @@ use App\Http\Resources\UserResource;
 use App\Models\Project;
 use App\Models\User;
 use App\Notifications\AddedUserToProjectNotification;
+use App\Notifications\CloseProjectNotification;
+use App\Notifications\ReopenProjectNotification;
+use App\Notifications\UpdateProjectNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -91,6 +94,13 @@ class ProjectController extends Controller
             'visibility' => $request->visibility,
         ]);
 
+        $project->users()
+            ->wherePivot('user_id', '!=', auth()->id())
+            ->get()
+            ->each(function ($user) use ($project) {
+                $user->notify(new UpdateProjectNotification($project));
+            });
+
         return redirect()->route('projects.index', $project);
     }
 
@@ -149,6 +159,13 @@ class ProjectController extends Controller
             'status' => 'closed',
         ]);
 
+        $project->users()
+            ->wherePivot('user_id', '!=', auth()->id())
+            ->get()
+            ->each(function ($user) use ($project) {
+                $user->notify(new CloseProjectNotification($project));
+            });
+
         return redirect()->route('project.edit', $project);
     }
 
@@ -157,6 +174,13 @@ class ProjectController extends Controller
         $project->update([
             'status' => 'open',
         ]);
+
+        $project->users()
+            ->wherePivot('user_id', '!=', auth()->id())
+            ->get()
+            ->each(function ($user) use ($project) {
+                $user->notify(new ReopenProjectNotification($project));
+            });
 
         return redirect()->route('project.edit', $project);
     }

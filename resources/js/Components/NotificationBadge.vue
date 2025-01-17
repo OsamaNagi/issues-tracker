@@ -8,8 +8,6 @@ const page = usePage();
 const notificationsCount = computed(() => page.props.notificationsCount);
 const notifications = computed(() => page.props.notifications?.data);
 
-console.log(notifications.value);
-
 const toggleNotification = () => {
     const dropdownNotification = document.getElementById(
         "dropdownNotification"
@@ -32,6 +30,36 @@ const getNotificationType = (notification) => {
                             <span class="font-medium text-blue-500">
                                 ${notification.data.project_name}
                             </span> ${notification.data.title}.`;
+
+        case "close_project":
+            return ` Closed the
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.project_name}
+                            </span> project.`;
+
+        case "reopen_project":
+            return ` Reopened the
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.project_name}
+                            </span> project.`;
+
+        case "update_project":
+            return ` Updated the
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.project_name}
+                            </span> project.`;
+
+        case "assign_user_to_issue":
+            return ` assigned you to the issue
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.issue_title}
+                            </span>.`;
+
+        case "unassign_user_from_issue":
+            return ` unassigned you from the issue
+                            <span class="font-medium text-blue-500">
+                                ${notification.data.issue_title}
+                            </span>.`;
 
         default:
             return "performed an action.";
