@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\Issue;
 use App\Models\Project;
+use App\Notifications\AddCommentNotification;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -19,6 +20,13 @@ class CommentController extends Controller
             'user_id' => auth()->id(),
             'content' => $request->input('content')
         ]);
+
+        $issue->assignees()
+            ->where('user_id', '!=', auth()->id())
+            ->get()
+            ->each(function ($user) use ($issue) {
+                $user->notify(new AddCommentNotification($issue));
+            });
 
         activity()
             ->useLog('comment')

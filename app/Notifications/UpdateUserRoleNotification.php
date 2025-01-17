@@ -7,14 +7,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class UnassignUserFromIssueNotification extends Notification
+class UpdateUserRoleNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(protected $issue, protected $user)
+    public function __construct(protected $user)
     {
         //
     }
@@ -48,10 +48,9 @@ class UnassignUserFromIssueNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'notification_type' => 'unassign_user_from_issue',
-            'issue_id' => $this->issue->id,
-            'issue_title' => $this->issue->title,
+            'notification_type' => 'update_user_role',
             'user_id' => $this->user->id,
+            'role_name' => $this->user->roles()->first()->name,
             'created_by' => auth()->user()->name,
         ];
     }

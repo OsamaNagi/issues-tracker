@@ -7,6 +7,7 @@ use App\Models\Project;
 use App\Models\User;
 use App\Notifications\AddedUserToProjectNotification;
 use App\Notifications\CloseProjectNotification;
+use App\Notifications\RemoveUserFromProjectNotification;
 use App\Notifications\ReopenProjectNotification;
 use App\Notifications\UpdateProjectNotification;
 use Illuminate\Http\Request;
@@ -148,6 +149,8 @@ class ProjectController extends Controller
 
     public function removeUser(Project $project, User $user)
     {
+        $user->notify(new RemoveUserFromProjectNotification($project));
+
         $project->users()->detach($user);
 
         return redirect()->route('project.add-users', $project);
