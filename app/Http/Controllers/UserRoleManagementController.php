@@ -33,6 +33,8 @@ class UserRoleManagementController extends Controller
 
         $user->notify(new UpdateUserRoleNotification($user));
 
-        return redirect()->route('user-role-management');
+        return redirect()->route('user-role-management')->with([
+            'success' => 'User role updated successfully.',
+        ]);
     }
 }

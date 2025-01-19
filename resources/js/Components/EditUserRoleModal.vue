@@ -1,12 +1,9 @@
 <script setup>
-import {ref} from "vue";
-import InputField from "@/Components/InputField.vue";
+import {computed, ref} from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import TextareaField from "@/Components/TextareaField.vue";
-import LabelInputField from "@/Components/LabelInputField.vue";
 import vSelect from "vue-select";
 import "vue-select/dist/vue-select.css";
-import {useForm} from "@inertiajs/vue3";
+import {useForm, usePage} from "@inertiajs/vue3";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const props = defineProps({
@@ -36,7 +33,7 @@ const form = useForm({
 
 // Handle form submission
 const submitForm = () => {
-    form.patch(route('user-role-management.update', { user: props.user.id }), {
+    form.patch(route('user-role-management.update', {user: props.user.id}), {
         onSuccess: () => {
             closeModal();
         },
@@ -124,7 +121,6 @@ const submitForm = () => {
                         </SecondaryButton>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>

@@ -1,10 +1,15 @@
 <script setup>
-import { Head } from "@inertiajs/vue3";
+import {Head, usePage} from "@inertiajs/vue3";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import Heading from "@/Components/Heading.vue";
 import AddUserToProjectModal from "@/Components/AddUserToProjectModal.vue";
 import EditUserRoleModal from "@/Components/EditUserRoleModal.vue";
 import Pagination from "@/Components/Pagination.vue";
+import SuccessMessage from "@/Components/SuccessMessage.vue";
+import {computed} from "vue";
+
+const page = usePage();
+const flashMessage = computed(() => page.props.flash.success);
 
 const props = defineProps({
     users: {
@@ -30,6 +35,10 @@ const props = defineProps({
                 ]"
                 heading="Manage Role Assignment"
             />
+
+            <div class="absolute bottom-5 right-5">
+                <SuccessMessage v-if="flashMessage" />
+            </div>
 
             <div
                 class="relative mt-10 overflow-x-auto border border-gray-200 rounded-lg dark:border-gray-600"
